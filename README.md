@@ -1,245 +1,212 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Quantum VPN</title>
-<link rel="stylesheet" href="css/system.css">
-</head>
-<body>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaVPN</title>
 
-<div class="app-shell">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
 
-  <header class="app-header">
-    <h1>Quantum VPN</h1>
-    <span id="statusBadge" class="badge">Disconnected</span>
-  </header>
-
-  <main class="app-content">
-
-    <div class="card">
-
-      <div class="field">
-        <label>Server</label>
-        <select id="serverSelect" class="dropdown">
-          <option value="tokyo">Tokyo</option>
-          <option value="newyork">New York</option>
-          <option value="london">London</option>
-          <option value="singapore">Singapore</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <button id="toggleBtn" class="toggle-button">
-          Connect
-        </button>
-      </div>
-
-      <div class="metrics">
-        <div class="metric">
-          <span class="metric-label">Latency</span>
-          <span id="latencyValue" class="metric-value">-- ms</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Throughput</span>
-          <span id="throughputValue" class="metric-value">-- Mbps</span>
-        </div>
-      </div>
-
-      <div class="progress">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
-
-    </div>
-
-  </main>
-
-</div>
-
-<script type="module" src="js/app.js"></script>
-</body>
-</html>
-:root {
-  --bg-primary: #0f1115;
-  --bg-surface: #161a22;
-
-  --text-primary: #e5e7eb;
-  --text-muted: #9ca3af;
-
-  --accent: #2dd4bf;
-  --success: #22c55e;
-  --danger: #ef4444;
-
-  --border-subtle: #262b36;
-
-  --space-2: 8px;
-  --space-4: 16px;
-  --space-6: 32px;
-
-  --radius: 12px;
-
-  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+<style>
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  display: flex;
-  justify-content: center;
-  padding: var(--space-6);
-}
-
-.app-shell {
-  width: 100%;
-  max-width: 720px;
-}
-
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-6);
-}
-
-.badge {
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  background: rgba(255,255,255,0.05);
-  transition: var(--transition);
-}
-
-.badge.connected {
-  background: rgba(34,197,94,0.15);
-  color: var(--success);
-}
-
-.card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
-  padding: var(--space-6);
-}
-
-.field {
-  margin-bottom: var(--space-4);
-}
-
-.dropdown,
-.toggle-button {
-  width: 100%;
-  padding: var(--space-2);
-  border-radius: var(--radius);
-  border: 1px solid var(--border-subtle);
-  background: transparent;
-  color: var(--text-primary);
-  transition: var(--transition);
-}
-
-.dropdown:focus,
-.toggle-button:hover {
-  border-color: var(--accent);
-}
-
-.metrics {
-  display: flex;
-  justify-content: space-between;
-  margin-top: var(--space-4);
-}
-
-.metric-label {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.metric-value {
-  font-weight: 500;
-}
-
-.progress {
-  margin-top: var(--space-4);
-  height: 6px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 999px;
+  background: radial-gradient(circle at center, #0a0a0a 0%, #000 70%);
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
 }
 
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  background: var(--accent);
-  transition: var(--transition);
-}
-const STATES = {
-  DISCONNECTED: "DISCONNECTED",
-  CONNECTING: "CONNECTING",
-  CONNECTED: "CONNECTED"
-};
+canvas { position: fixed; top:0; left:0; }
 
-let state = STATES.DISCONNECTED;
-let progress = 0;
-
-const badge = document.getElementById("statusBadge");
-const toggleBtn = document.getElementById("toggleBtn");
-const progressFill = document.getElementById("progressFill");
-const latencyValue = document.getElementById("latencyValue");
-const throughputValue = document.getElementById("throughputValue");
-
-function render() {
-  badge.textContent = state;
-
-  if (state === STATES.CONNECTED) {
-    badge.classList.add("connected");
-    toggleBtn.textContent = "Disconnect";
-  } else {
-    badge.classList.remove("connected");
-    toggleBtn.textContent = "Connect";
-  }
-
-  progressFill.style.width = progress + "%";
+#ui {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-function simulateConnection() {
-  state = STATES.CONNECTING;
-  progress = 0;
-
-  const interval = setInterval(() => {
-    progress += 5;
-
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(interval);
-      state = STATES.CONNECTED;
-      simulateMetrics();
-    }
-
-    render();
-  }, 120);
+#header {
+  display:flex;
+  justify-content:space-between;
+  font-size:18px;
+  font-weight:600;
 }
 
-function simulateMetrics() {
-  setInterval(() => {
-    if (state !== STATES.CONNECTED) return;
-
-    const latency = 20 + Math.random() * 40;
-    const throughput = 100 + Math.random() * 80;
-
-    latencyValue.textContent = latency.toFixed(0) + " ms";
-    throughputValue.textContent = throughput.toFixed(1) + " Mbps";
-  }, 800);
+#serverPanel {
+  margin-top:20px;
+  display:flex;
+  gap:10px;
 }
 
-toggleBtn.addEventListener("click", () => {
-  if (state === STATES.DISCONNECTED) {
-    simulateConnection();
-  } else {
-    state = STATES.DISCONNECTED;
-    progress = 0;
-    latencyValue.textContent = "-- ms";
-    throughputValue.textContent = "-- Mbps";
-    render();
-  }
+select, button {
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+}
+
+button {
+  background:#ff0033;
+  color:white;
+}
+
+#stats {
+  margin-top:15px;
+  font-size:14px;
+  opacity:0.8;
+}
+
+#log {
+  margin-top:15px;
+  font-size:11px;
+  max-height:100px;
+  overflow-y:auto;
+  opacity:0.6;
+}
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+  <div id="header">
+    <span>NovaVPN</span>
+    <span id="status">Idle</span>
+  </div>
+
+  <div id="serverPanel">
+    <select id="serverSelect"></select>
+    <button id="connectBtn">Connect</button>
+  </div>
+
+  <div id="stats">
+    Latency: <span id="latency">--</span> ms |
+    Session: <span id="session">00:00</span>
+  </div>
+
+  <div id="log"></div>
+</div>
+
+<canvas id="globe"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+
+<script>
+const canvas = document.getElementById("globe");
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({canvas, alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+camera.position.z = 3;
+
+// Earth
+const geometry = new THREE.SphereGeometry(1, 64, 64);
+const material = new THREE.MeshBasicMaterial({wireframe:true, color:0x2222ff});
+const earth = new THREE.Mesh(geometry, material);
+scene.add(earth);
+
+let line;
+
+const servers = [
+  { name:"Tokyo", lat:35.6, lon:139.6 },
+  { name:"Los Angeles", lat:34.0, lon:-118.2 },
+  { name:"Frankfurt", lat:50.1, lon:8.6 }
+];
+
+const serverSelect = document.getElementById("serverSelect");
+servers.forEach((s,i)=>{
+  const o=document.createElement("option");
+  o.value=i;
+  o.textContent=s.name;
+  serverSelect.appendChild(o);
 });
 
-render();
+function latLonToVector3(lat, lon, radius=1){
+  const phi=(90-lat)*(Math.PI/180);
+  const theta=(lon+180)*(Math.PI/180);
+  return new THREE.Vector3(
+    -(radius*Math.sin(phi)*Math.cos(theta)),
+    radius*Math.cos(phi),
+    radius*Math.sin(phi)*Math.sin(theta)
+  );
+}
+
+function createLine(target){
+  if(line) scene.remove(line);
+
+  const start=latLonToVector3(0,0);
+  const end=latLonToVector3(target.lat,target.lon);
+
+  const points=[];
+  for(let i=0;i<=50;i++){
+    const p=start.clone().lerp(end,i/50);
+    p.normalize().multiplyScalar(1.2);
+    points.push(p);
+  }
+
+  const geo=new THREE.BufferGeometry().setFromPoints(points);
+  const mat=new THREE.LineBasicMaterial({color:0xff0033});
+  line=new THREE.Line(geo,mat);
+  scene.add(line);
+}
+
+function log(msg){
+  const l=document.getElementById("log");
+  l.innerHTML+=msg+"<br>";
+  l.scrollTop=l.scrollHeight;
+}
+
+let state="idle";
+let sessionTime=0;
+let timer;
+
+function connect(){
+  if(state==="connected") return;
+
+  const selected=servers[serverSelect.value];
+  state="connecting";
+  document.getElementById("status").textContent="Connecting...";
+  log("Initiating secure handshake...");
+  createLine(selected);
+
+  setTimeout(()=>{
+    state="connected";
+    document.getElementById("status").textContent="Connected";
+    const latency=Math.floor(Math.random()*80+20);
+    document.getElementById("latency").textContent=latency;
+    log("Tunnel established. AES-256 encrypted.");
+    startTimer();
+  },2000);
+}
+
+function startTimer(){
+  sessionTime=0;
+  timer=setInterval(()=>{
+    sessionTime++;
+    const m=String(Math.floor(sessionTime/60)).padStart(2,"0");
+    const s=String(sessionTime%60).padStart(2,"0");
+    document.getElementById("session").textContent=m+":"+s;
+  },1000);
+}
+
+document.getElementById("connectBtn").addEventListener("click",connect);
+
+function animate(){
+  requestAnimationFrame(animate);
+  earth.rotation.y+=0.002;
+  renderer.render(scene,camera);
+}
+animate();
+
+window.addEventListener("resize",()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
+</script>
+
+</body>
+</html>
