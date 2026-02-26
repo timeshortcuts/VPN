@@ -1,50 +1,61 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NovaVPN</title>
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NovaVPN">
 <meta name="theme-color" content="#000000">
 
 <style>
-body {
-  margin: 0;
-  background: radial-gradient(circle at center, #0a0a0a 0%, #000 70%);
-  color: white;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden;
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  color:white;
 }
 
-canvas { position: fixed; top:0; left:0; }
+canvas { position:fixed; inset:0; }
 
 #ui {
-  position: absolute;
-  z-index: 10;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
+  position:absolute;
+  inset:0;
+  padding:
+    calc(env(safe-area-inset-top)+20px)
+    calc(env(safe-area-inset-right)+20px)
+    calc(env(safe-area-inset-bottom)+20px)
+    calc(env(safe-area-inset-left)+20px);
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  backdrop-filter: blur(20px);
 }
 
-#header {
+#topbar {
   display:flex;
   justify-content:space-between;
-  font-size:18px;
   font-weight:600;
 }
 
-#serverPanel {
-  margin-top:20px;
-  display:flex;
-  gap:10px;
+.panel {
+  background:rgba(20,20,20,0.6);
+  padding:15px;
+  border-radius:16px;
+  backdrop-filter:blur(20px);
 }
 
-select, button {
+select,button {
+  width:100%;
+  margin-top:8px;
   padding:10px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   font-weight:600;
 }
 
@@ -53,159 +64,162 @@ button {
   color:white;
 }
 
-#stats {
-  margin-top:15px;
-  font-size:14px;
-  opacity:0.8;
+.statgrid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  font-size:13px;
 }
 
+.label { opacity:0.6; font-size:11px; }
+
 #log {
-  margin-top:15px;
-  font-size:11px;
-  max-height:100px;
+  font-size:10px;
+  max-height:80px;
   overflow-y:auto;
   opacity:0.6;
+  margin-top:8px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="ui">
-  <div id="header">
-    <span>NovaVPN</span>
-    <span id="status">Idle</span>
-  </div>
-
-  <div id="serverPanel">
-    <select id="serverSelect"></select>
-    <button id="connectBtn">Connect</button>
-  </div>
-
-  <div id="stats">
-    Latency: <span id="latency">--</span> ms |
-    Session: <span id="session">00:00</span>
-  </div>
-
-  <div id="log"></div>
-</div>
-
 <canvas id="globe"></canvas>
+
+<div id="ui">
+  <div id="topbar">
+    <div>NovaVPN</div>
+    <div id="status">Idle</div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Server</div>
+    <select id="server"></select>
+
+    <div class="label">Protocol</div>
+    <select id="protocol">
+      <option>WireGuard</option>
+      <option>IKEv2</option>
+      <option>OpenVPN</option>
+    </select>
+
+    <button id="connect">Connect</button>
+  </div>
+
+  <div class="panel">
+    <div class="statgrid">
+      <div><div class="label">Latency</div><div id="latency">-- ms</div></div>
+      <div><div class="label">Session</div><div id="session">00:00</div></div>
+      <div><div class="label">Virtual IP</div><div id="ip">--</div></div>
+      <div><div class="label">Encryption</div><div id="enc">--</div></div>
+      <div><div class="label">Download</div><div id="down">0 KB</div></div>
+      <div><div class="label">Upload</div><div id="up">0 KB</div></div>
+    </div>
+    <div id="log"></div>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
 
 <script>
-const canvas = document.getElementById("globe");
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({canvas, alpha:true});
-renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.z = 3;
+/* ===== 3D Globe ===== */
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({canvas:globe,alpha:true});
+renderer.setSize(innerWidth,innerHeight);
+camera.position.z=3;
 
-// Earth
-const geometry = new THREE.SphereGeometry(1, 64, 64);
-const material = new THREE.MeshBasicMaterial({wireframe:true, color:0x2222ff});
-const earth = new THREE.Mesh(geometry, material);
-scene.add(earth);
-
-let line;
-
-const servers = [
-  { name:"Tokyo", lat:35.6, lon:139.6 },
-  { name:"Los Angeles", lat:34.0, lon:-118.2 },
-  { name:"Frankfurt", lat:50.1, lon:8.6 }
-];
-
-const serverSelect = document.getElementById("serverSelect");
-servers.forEach((s,i)=>{
-  const o=document.createElement("option");
-  o.value=i;
-  o.textContent=s.name;
-  serverSelect.appendChild(o);
-});
-
-function latLonToVector3(lat, lon, radius=1){
-  const phi=(90-lat)*(Math.PI/180);
-  const theta=(lon+180)*(Math.PI/180);
-  return new THREE.Vector3(
-    -(radius*Math.sin(phi)*Math.cos(theta)),
-    radius*Math.cos(phi),
-    radius*Math.sin(phi)*Math.sin(theta)
-  );
-}
-
-function createLine(target){
-  if(line) scene.remove(line);
-
-  const start=latLonToVector3(0,0);
-  const end=latLonToVector3(target.lat,target.lon);
-
-  const points=[];
-  for(let i=0;i<=50;i++){
-    const p=start.clone().lerp(end,i/50);
-    p.normalize().multiplyScalar(1.2);
-    points.push(p);
-  }
-
-  const geo=new THREE.BufferGeometry().setFromPoints(points);
-  const mat=new THREE.LineBasicMaterial({color:0xff0033});
-  line=new THREE.Line(geo,mat);
-  scene.add(line);
-}
-
-function log(msg){
-  const l=document.getElementById("log");
-  l.innerHTML+=msg+"<br>";
-  l.scrollTop=l.scrollHeight;
-}
-
-let state="idle";
-let sessionTime=0;
-let timer;
-
-function connect(){
-  if(state==="connected") return;
-
-  const selected=servers[serverSelect.value];
-  state="connecting";
-  document.getElementById("status").textContent="Connecting...";
-  log("Initiating secure handshake...");
-  createLine(selected);
-
-  setTimeout(()=>{
-    state="connected";
-    document.getElementById("status").textContent="Connected";
-    const latency=Math.floor(Math.random()*80+20);
-    document.getElementById("latency").textContent=latency;
-    log("Tunnel established. AES-256 encrypted.");
-    startTimer();
-  },2000);
-}
-
-function startTimer(){
-  sessionTime=0;
-  timer=setInterval(()=>{
-    sessionTime++;
-    const m=String(Math.floor(sessionTime/60)).padStart(2,"0");
-    const s=String(sessionTime%60).padStart(2,"0");
-    document.getElementById("session").textContent=m+":"+s;
-  },1000);
-}
-
-document.getElementById("connectBtn").addEventListener("click",connect);
+const sphere=new THREE.Mesh(
+  new THREE.SphereGeometry(1,64,64),
+  new THREE.MeshBasicMaterial({wireframe:true,color:0x2222ff})
+);
+scene.add(sphere);
 
 function animate(){
   requestAnimationFrame(animate);
-  earth.rotation.y+=0.002;
+  sphere.rotation.y+=0.002;
   renderer.render(scene,camera);
 }
 animate();
 
-window.addEventListener("resize",()=>{
-  camera.aspect=window.innerWidth/window.innerHeight;
+addEventListener("resize",()=>{
+  camera.aspect=innerWidth/innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setSize(innerWidth,innerHeight);
 });
+
+/* ===== Data ===== */
+const servers=[
+  {name:"Tokyo",ip:"103.21.244.1"},
+  {name:"Los Angeles",ip:"172.67.194.22"},
+  {name:"Frankfurt",ip:"104.26.10.78"}
+];
+
+servers.forEach((s,i)=>{
+  const o=document.createElement("option");
+  o.value=i;
+  o.textContent=s.name;
+  server.appendChild(o);
+});
+
+/* ===== VPN Simulation ===== */
+let state="idle";
+let session=0,down=0,up=0;
+let timer,trafficTimer;
+
+function log(msg){
+  logDiv.innerHTML+=msg+"<br>";
+  logDiv.scrollTop=logDiv.scrollHeight;
+}
+
+function connect(){
+  if(state==="connected") return;
+  state="connecting";
+  status.textContent="Connecting...";
+  log("Initiating handshake...");
+  setTimeout(()=>{
+    state="connected";
+    status.textContent="Connected";
+    ip.textContent=servers[server.value].ip;
+    enc.textContent="AES-256-GCM";
+    latency.textContent=Math.floor(Math.random()*50+20)+" ms";
+    log("Tunnel established.");
+    startSession();
+  },2000);
+}
+
+function startSession(){
+  session=0; down=0; up=0;
+  timer=setInterval(()=>{
+    session++;
+    const m=String(Math.floor(session/60)).padStart(2,"0");
+    const s=String(session%60).padStart(2,"0");
+    sessionEl.textContent=m+":"+s;
+  },1000);
+
+  trafficTimer=setInterval(()=>{
+    down+=Math.floor(Math.random()*50);
+    up+=Math.floor(Math.random()*20);
+    downEl.textContent=down+" KB";
+    upEl.textContent=up+" KB";
+  },1000);
+}
+
+connectBtn.addEventListener("click",connect);
+
+/* ===== Element refs ===== */
+const status=document.getElementById("status");
+const server=document.getElementById("server");
+const protocol=document.getElementById("protocol");
+const connectBtn=document.getElementById("connect");
+const latency=document.getElementById("latency");
+const sessionEl=document.getElementById("session");
+const ip=document.getElementById("ip");
+const enc=document.getElementById("enc");
+const downEl=document.getElementById("down");
+const upEl=document.getElementById("up");
+const logDiv=document.getElementById("log");
 </script>
 
 </body>
