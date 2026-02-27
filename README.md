@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -84,6 +83,7 @@ transition:width .3s;
 }
 .statusText{margin-top:15px;color:var(--green);}
 
+/* 3Dマップ画面 */
 #mapContainer{
 position:absolute;
 width:100%;
@@ -98,10 +98,11 @@ background:radial-gradient(circle,#001a11,#000);
 position:absolute;
 top:20px;
 right:20px;
-background:#001a11;
+background:rgba(0,0,0,0.4);
 padding:15px;
 border-radius:15px;
 box-shadow:0 0 20px var(--green);
+backdrop-filter:blur(10px);
 display:none;
 font-size:14px;
 }
@@ -215,18 +216,37 @@ let scene=new THREE.Scene();
 let camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
 let renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 document.getElementById("mapContainer").appendChild(renderer.domElement);
 
-let globe=new THREE.Mesh(
-new THREE.SphereGeometry(2,64,64),
-new THREE.MeshBasicMaterial({color:0x003322,wireframe:true})
-);
+let loader=new THREE.TextureLoader();
+let earthTexture=loader.load('https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg');
+let bumpTexture=loader.load('https://threejs.org/examples/textures/earthbump1k.jpg');
+let specTexture=loader.load('https://threejs.org/examples/textures/earthspec1k.jpg');
+
+let material=new THREE.MeshPhongMaterial({
+map:earthTexture,
+bumpMap:bumpTexture,
+bumpScale:0.05,
+specularMap:specTexture,
+specular:new THREE.Color('grey')
+});
+
+let globe=new THREE.Mesh(new THREE.SphereGeometry(2,64,64),material);
 scene.add(globe);
+
 camera.position.z=5;
+
+let ambient=new THREE.AmbientLight(0x404040);
+scene.add(ambient);
+
+let light=new THREE.DirectionalLight(0xffffff,1);
+light.position.set(5,3,5);
+scene.add(light);
 
 function animate(){
 requestAnimationFrame(animate);
-globe.rotation.y+=0.002;
+globe.rotation.y+=0.0015;
 renderer.render(scene,camera);
 }
 animate();
@@ -239,6 +259,22 @@ return new THREE.Vector3(
 radius*Math.cos(phi),
 radius*Math.sin(phi)*Math.sin(theta)
 );
+}
+
+function focusOn(target){
+let dir=target.clone().normalize();
+let targetRotation=Math.atan2(dir.x,dir.z);
+let startRotation=globe.rotation.y;
+let duration=1000;
+let startTime=performance.now();
+
+function rotate(now){
+let elapsed=now-startTime;
+let progress=Math.min(elapsed/duration,1);
+globe.rotation.y=startRotation+(targetRotation-startRotation)*progress;
+if(progress<1){requestAnimationFrame(rotate);}
+}
+requestAnimationFrame(rotate);
 }
 
 function show3DMap(){
@@ -266,14 +302,14 @@ end
 
 let points=curve.getPoints(50);
 let geometry=new THREE.BufferGeometry().setFromPoints(points);
-let material=new THREE.LineBasicMaterial({color:0xff0000});
-let line=new THREE.Line(geometry,material);
+let materialLine=new THREE.LineBasicMaterial({color:0xff0000});
+let line=new THREE.Line(geometry,materialLine);
 scene.add(line);
+
+focusOn(end);
 }
 
-/* =====================
-   Traffic + Logs
-===================== */
+/* Traffic + Logs */
 let latestPing=0;
 
 function simulateTraffic(){
@@ -294,9 +330,6 @@ log.scrollTop=log.scrollHeight;
 },800);
 }
 
-/* =====================
-   Finish
-===================== */
 function finishConnection(){
 document.getElementById("mapContainer").classList.add("hidden");
 document.getElementById("phase2").classList.remove("hidden");
