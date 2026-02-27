@@ -1,341 +1,259 @@
-<html lang="ja">
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>NovaCore X Ultimate</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
+<title>Neon Network Map</title>
 <style>
-:root{
---green:#00ff88;
---red:#ff0033;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system;}
-body{background:#000;color:#fff;height:100vh;overflow:hidden;}
-
-.screen{
-position:absolute;
-width:100%;
-height:100%;
-top:0;
-left:0;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-transition:.8s;
-}
-
-.hidden{opacity:0;transform:scale(.95);pointer-events:none;}
-
-.logo{
-width:90px;height:90px;
-background:radial-gradient(circle,var(--green),#003322);
-clip-path:polygon(50% 0%,90% 25%,90% 75%,50% 100%,10% 75%,10% 25%);
-box-shadow:0 0 40px var(--green);
-animation:pulse 2s infinite alternate;
-margin-bottom:20px;
-}
-@keyframes pulse{
-from{box-shadow:0 0 20px var(--green);}
-to{box-shadow:0 0 60px var(--green);}
-}
-
-select,button{
-width:80%;
-padding:14px;
-margin:8px 0;
-border-radius:14px;
-border:none;
-font-size:16px;
-}
-
-select{
-background:#111;
-color:var(--green);
-border:1px solid var(--green);
-}
-
-button{
-background:var(--green);
-color:#000;
-font-weight:600;
-cursor:pointer;
-}
-
-.progress{
-width:80%;
-height:8px;
-background:#111;
-border-radius:8px;
-overflow:hidden;
-margin-top:15px;
-}
-.bar{
-height:100%;
-width:0%;
-background:var(--red);
-transition:width .3s;
-}
-.statusText{margin-top:15px;color:var(--green);}
-
-/* 3Dマップ画面 */
-#mapContainer{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-justify-content:center;
-align-items:center;
-background:radial-gradient(circle,#001a11,#000);
-}
-
-#metrics{
+body{margin:0;overflow:hidden;background:black;font-family:Arial;}
+#ui{
 position:absolute;
 top:20px;
-right:20px;
-background:rgba(0,0,0,0.4);
-padding:15px;
-border-radius:15px;
-box-shadow:0 0 20px var(--green);
-backdrop-filter:blur(10px);
-display:none;
-font-size:14px;
-}
-
-#log{
-position:absolute;
-bottom:0;
-width:100%;
-height:120px;
-background:#000;
-color:var(--green);
-font-size:12px;
-overflow:hidden;
-padding:5px;
-}
-
-.statusBox{
-background:#000;
-padding:25px;
+left:50%;
+transform:translateX(-50%);
+z-index:10;
+background:rgba(0,0,0,0.6);
+padding:10px 20px;
 border-radius:20px;
-box-shadow:0 0 40px var(--green);
+color:#00ffff;
+border:1px solid #00ffff;
 }
-
-.safe{
-padding-bottom:env(safe-area-inset-bottom);
-padding-top:env(safe-area-inset-top);
+select,button{
+background:black;
+color:#00ffff;
+border:1px solid #00ffff;
+padding:6px 12px;
+border-radius:12px;
+}
+#tooltip{
+position:absolute;
+color:#00ffff;
+background:rgba(0,0,0,0.8);
+padding:5px 10px;
+border:1px solid #00ffff;
+border-radius:6px;
+display:none;
+font-size:12px;
 }
 </style>
 </head>
 <body>
 
-<!-- Phase1 -->
-<div id="phase1" class="screen safe">
-<div class="logo"></div>
-<h1>NOVA CORE X</h1>
-
+<div id="ui">
 <select id="server">
-<option value="35.6895,139.6917">Tokyo</option>
-<option value="40.7128,-74.0060">New York</option>
-<option value="51.5074,-0.1278">London</option>
-<option value="52.52,13.405">Berlin</option>
-<option value="1.3521,103.8198">Singapore</option>
+<option value="ny">New York Route</option>
+<option value="london">London Route</option>
+<option value="singapore">Singapore Route</option>
+<option value="dubai">Dubai Route</option>
 </select>
-
-<button onclick="startConnection()">CONNECT</button>
-
-<div class="progress"><div class="bar" id="bar"></div></div>
-<div class="statusText" id="statusText"></div>
+<button onclick="connectNetwork()">Connect</button>
 </div>
 
-<!-- 3D Map -->
-<div id="mapContainer" class="screen hidden">
-<div id="metrics">
-Ping: <span id="ping"></span> ms<br>
-Down: <span id="down"></span> Mbps<br>
-Up: <span id="up"></span> Mbps
-</div>
-<div id="log"></div>
-</div>
+<div id="tooltip"></div>
 
-<!-- Phase2 -->
-<div id="phase2" class="screen hidden safe">
-<h2 style="color:var(--green);margin-bottom:20px;">SECURE TUNNEL ACTIVE</h2>
-<div class="statusBox">
-<p>Status: Encrypted</p>
-<p>Protocol: NovaShield X</p>
-<p>IP Masking: Active</p>
-<p>Latency: <span id="finalPing"></span> ms</p>
-</div>
-<button onclick="location.reload()">DISCONNECT</button>
-</div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/SVGLoader.js"></script>
 <script>
-/* =====================
-   Phase1 Progress
-===================== */
-const steps=[
-"Initializing secure tunnel...",
-"Authenticating server...",
-"Establishing encryption...",
-"Routing global traffic...",
-"Securing DNS layer...",
-"Finalizing session..."
-];
-
-function startConnection(){
-let bar=document.getElementById("bar");
-let status=document.getElementById("statusText");
-let width=0; let stepIndex=0;
-
-let interval=setInterval(()=>{
-width+=2;
-bar.style.width=width+"%";
-
-if(width%15===0 && stepIndex<steps.length){
-status.innerText=steps[stepIndex++];
-}
-
-if(width>=100){
-clearInterval(interval);
-status.innerText="Connection Established";
-setTimeout(show3DMap,800);
-}
-},100);
-}
-
-/* =====================
-   3D Globe Setup
-===================== */
 let scene=new THREE.Scene();
-let camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+let camera=new THREE.OrthographicCamera(
+window.innerWidth/-2,
+window.innerWidth/2,
+window.innerHeight/2,
+window.innerHeight/-2,
+1,1000);
+camera.position.z=10;
+
 let renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-document.getElementById("mapContainer").appendChild(renderer.domElement);
+renderer.setClearColor(0x000000);
+document.body.appendChild(renderer.domElement);
 
-let loader=new THREE.TextureLoader();
-let earthTexture=loader.load('https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg');
-let bumpTexture=loader.load('https://threejs.org/examples/textures/earthbump1k.jpg');
-let specTexture=loader.load('https://threejs.org/examples/textures/earthspec1k.jpg');
+let width=window.innerWidth;
+let height=window.innerHeight;
 
-let material=new THREE.MeshPhongMaterial({
-map:earthTexture,
-bumpMap:bumpTexture,
-bumpScale:0.05,
-specularMap:specTexture,
-specular:new THREE.Color('grey')
+// --------------------
+// SVG 世界地図読み込み
+// --------------------
+const loader=new THREE.SVGLoader();
+loader.load(
+'https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg',
+function(data){
+const paths=data.paths;
+paths.forEach(path=>{
+const shapes=THREE.SVGLoader.createShapes(path);
+shapes.forEach(shape=>{
+const geo=new THREE.ShapeGeometry(shape);
+const mat=new THREE.MeshBasicMaterial({
+color:0x00ffff,
+transparent:true,
+opacity:0.15,
+blending:THREE.AdditiveBlending
+});
+const mesh=new THREE.Mesh(geo,mat);
+mesh.scale.set(3,-3,1);
+mesh.position.set(-width/2,-height/2,0);
+scene.add(mesh);
+});
+});
 });
 
-let globe=new THREE.Mesh(new THREE.SphereGeometry(2,64,64),material);
-scene.add(globe);
+// --------------------
+// 緯度経度→XY
+// --------------------
+function latLonToXY(lat,lon){
+let x=(lon+180)/360*width-width/2;
+let y=(90-lat)/180*height-height/2;
+return new THREE.Vector3(x,y,1);
+}
 
-camera.position.z=5;
+// --------------------
+// ネオンノード
+// --------------------
+let nodes=[];
+function createNode(lat,lon,color,name){
+let pos=latLonToXY(lat,lon);
 
-let ambient=new THREE.AmbientLight(0x404040);
-scene.add(ambient);
+let geo=new THREE.CircleGeometry(6,32);
+let mat=new THREE.MeshBasicMaterial({
+color:color,
+blending:THREE.AdditiveBlending
+});
+let node=new THREE.Mesh(geo,mat);
+node.position.copy(pos);
+node.userData.name=name;
+scene.add(node);
+nodes.push(node);
+return node;
+}
 
-let light=new THREE.DirectionalLight(0xffffff,1);
-light.position.set(5,3,5);
-scene.add(light);
+// --------------------
+// 順番進行ブリッジ
+// --------------------
+function animateBridge(start,end,color,delay){
+setTimeout(()=>{
+let progress=0;
 
+let geo=new THREE.BufferGeometry().setFromPoints([start,start]);
+let mat=new THREE.LineBasicMaterial({
+color:color,
+transparent:true,
+opacity:0.9,
+blending:THREE.AdditiveBlending
+});
+let line=new THREE.Line(geo,mat);
+scene.add(line);
+
+function grow(){
+progress+=0.02;
+if(progress>1)progress=1;
+
+let current=start.clone().lerp(end,progress);
+line.geometry.setFromPoints([start,current]);
+
+if(progress<1){
+requestAnimationFrame(grow);
+}
+}
+grow();
+
+},delay);
+}
+
+// --------------------
+// ルート定義
+// --------------------
+let routes={
+ny:[
+{lat:35.6895,lon:139.6917,name:"Tokyo"},
+{lat:55.7558,lon:37.6173,name:"Moscow"},
+{lat:51.5074,lon:-0.1278,name:"London"},
+{lat:40.7128,lon:-74.0060,name:"New York"}
+],
+london:[
+{lat:35.6895,lon:139.6917,name:"Tokyo"},
+{lat:28.6139,lon:77.2090,name:"Delhi"},
+{lat:48.8566,lon:2.3522,name:"Paris"},
+{lat:51.5074,lon:-0.1278,name:"London"}
+],
+singapore:[
+{lat:35.6895,lon:139.6917,name:"Tokyo"},
+{lat:22.3193,lon:114.1694,name:"Hong Kong"},
+{lat:1.3521,lon:103.8198,name:"Singapore"},
+{lat:-33.8688,lon:151.2093,name:"Sydney"}
+],
+dubai:[
+{lat:35.6895,lon:139.6917,name:"Tokyo"},
+{lat:19.0760,lon:72.8777,name:"Mumbai"},
+{lat:25.2048,lon:55.2708,name:"Dubai"},
+{lat:41.0082,lon:28.9784,name:"Istanbul"}
+]
+};
+
+// --------------------
+// 接続
+// --------------------
+function connectNetwork(){
+nodes.forEach(n=>scene.remove(n));
+nodes=[];
+
+let selected=document.getElementById("server").value;
+let route=routes[selected];
+
+let created=[];
+route.forEach((city,i)=>{
+let color=[0xff0033,0x00ffff,0xffff00,0xff8800][i];
+let node=createNode(city.lat,city.lon,color,city.name);
+created.push(node);
+});
+
+for(let i=0;i<created.length-1;i++){
+animateBridge(
+created[i].position,
+created[i+1].position,
+created[i].material.color,
+i*1000
+);
+}
+}
+
+// --------------------
+// ホバー表示
+// --------------------
+let raycaster=new THREE.Raycaster();
+let mouse=new THREE.Vector2();
+let tooltip=document.getElementById("tooltip");
+
+window.addEventListener("mousemove",event=>{
+mouse.x=(event.clientX/window.innerWidth)*2-1;
+mouse.y=-(event.clientY/window.innerHeight)*2+1;
+
+raycaster.setFromCamera(mouse,camera);
+let intersects=raycaster.intersectObjects(nodes);
+
+if(intersects.length>0){
+tooltip.style.display="block";
+tooltip.style.left=event.clientX+10+"px";
+tooltip.style.top=event.clientY+10+"px";
+tooltip.innerHTML=intersects[0].object.userData.name;
+}else{
+tooltip.style.display="none";
+}
+});
+
+// --------------------
+// ズーム
+// --------------------
+window.addEventListener("wheel",e=>{
+camera.zoom+=e.deltaY*-0.001;
+camera.zoom=Math.min(Math.max(0.5,camera.zoom),5);
+camera.updateProjectionMatrix();
+});
+
+// --------------------
 function animate(){
 requestAnimationFrame(animate);
-globe.rotation.y+=0.0015;
 renderer.render(scene,camera);
 }
 animate();
-
-function latLonToVector3(lat,lon,radius){
-let phi=(90-lat)*(Math.PI/180);
-let theta=(lon+180)*(Math.PI/180);
-return new THREE.Vector3(
--(radius*Math.sin(phi)*Math.cos(theta)),
-radius*Math.cos(phi),
-radius*Math.sin(phi)*Math.sin(theta)
-);
-}
-
-function focusOn(target){
-let dir=target.clone().normalize();
-let targetRotation=Math.atan2(dir.x,dir.z);
-let startRotation=globe.rotation.y;
-let duration=1000;
-let startTime=performance.now();
-
-function rotate(now){
-let elapsed=now-startTime;
-let progress=Math.min(elapsed/duration,1);
-globe.rotation.y=startRotation+(targetRotation-startRotation)*progress;
-if(progress<1){requestAnimationFrame(rotate);}
-}
-requestAnimationFrame(rotate);
-}
-
-function show3DMap(){
-document.getElementById("phase1").classList.add("hidden");
-document.getElementById("mapContainer").classList.remove("hidden");
-connect3D();
-simulateTraffic();
-startLogs();
-setTimeout(finishConnection,6000);
-}
-
-function connect3D(){
-let val=document.getElementById("server").value.split(",");
-let lat=parseFloat(val[0]);
-let lon=parseFloat(val[1]);
-
-let start=latLonToVector3(35.6895,139.6917,2);
-let end=latLonToVector3(lat,lon,2);
-
-let curve=new THREE.QuadraticBezierCurve3(
-start,
-start.clone().add(end).multiplyScalar(0.5).setLength(3),
-end
-);
-
-let points=curve.getPoints(50);
-let geometry=new THREE.BufferGeometry().setFromPoints(points);
-let materialLine=new THREE.LineBasicMaterial({color:0xff0000});
-let line=new THREE.Line(geometry,materialLine);
-scene.add(line);
-
-focusOn(end);
-}
-
-/* Traffic + Logs */
-let latestPing=0;
-
-function simulateTraffic(){
-document.getElementById("metrics").style.display="block";
-setInterval(()=>{
-latestPing=(10+Math.random()*40).toFixed(0);
-document.getElementById("ping").innerText=latestPing;
-document.getElementById("down").innerText=(50+Math.random()*100).toFixed(1);
-document.getElementById("up").innerText=(10+Math.random()*50).toFixed(1);
-},1000);
-}
-
-function startLogs(){
-let log=document.getElementById("log");
-setInterval(()=>{
-log.innerText+="["+new Date().toLocaleTimeString()+"] Secure packet transmitted\n";
-log.scrollTop=log.scrollHeight;
-},800);
-}
-
-function finishConnection(){
-document.getElementById("mapContainer").classList.add("hidden");
-document.getElementById("phase2").classList.remove("hidden");
-document.getElementById("finalPing").innerText=latestPing;
-}
 </script>
-
 </body>
 </html>
