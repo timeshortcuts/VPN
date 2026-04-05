@@ -1,76 +1,73 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacker Terminal</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <title>Hacker Interface Entry Screen</title>
     <style>
         body {
-            background-color: black;
-            font-family: 'Courier New', monospace;
-            color: #0F0;
-            overflow: hidden;
-        }
-        #desktop {
-            position: relative;
-            width: 100%;
+            margin: 0;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
+            background: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            position: relative;
         }
-        .window {
-            border: 2px solid #0F0;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 10px;
+        .network {
             position: absolute;
-            box-shadow: 0 0 10px #0F0;
-        }
-        .world-map {
-            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('world-map.png'); /* A world map background image */
+            background: url('https://example.com/network-animation.gif') no-repeat center center fixed;
             background-size: cover;
-            opacity: 0.5;
-            animation: fadeIn 5s infinite alternate;
+            z-index: -1;
+            animation: flicker 1.5s infinite;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.5; }
+        @keyframes flicker {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 0.6; }
+        }
+        .title {
+            font-size: 3rem;
+            text-align: center;
+            animation: flicker-title 2s infinite;
+        }
+        @keyframes flicker-title {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .mode-selection {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .mode-button {
+            background-color: #007acc;
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .mode-button:hover {
+            background-color: #005f99;
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <div id="desktop">
-        <div class="world-map"></div>
-        <div class="window" style="left: 20px; top: 20px; width: 300px; height: 200px;">
-            <h2>Authentication</h2>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button onclick="authenticate()">Login</button>
-        </div>
-        <div class="window" style="left: 350px; top: 20px; width: 300px; height: 200px;">
-            <h2>Data Extraction</h2>
-            <button onclick="extractData()">Extract Data</button>
-            <div id="dataOutput"></div>
-        </div>
+    <div class="network"></div>
+    <div class="title">System Title</div>
+    <div class="mode-selection">
+        <button class="mode-button">Mode 1</button>
+        <button class="mode-button">Mode 2</button>
     </div>
-    <script>
-        function authenticate() {
-            // Simple authentication process
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            if(username === 'admin' && password === 'password123') {
-                alert('Welcome, Hacker!');
-            } else {
-                alert('Access Denied!');
-            }
-        }
-        function extractData() {
-            const output = document.getElementById('dataOutput');
-            output.innerHTML = 'Data extracted successfully!';
-            // Here would be the code to extract actual data
-        }
-    </script>
 </body>
 </html>
