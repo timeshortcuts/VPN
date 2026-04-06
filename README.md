@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,7 +6,6 @@
     <title>NEXUS-9 SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        /* ===== GLOBAL STYLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -54,7 +54,7 @@
             pointer-events: auto;
         }
 
-        /* ===== ENTRY SCREEN ===== */
+        /* ===== ENTRY ===== */
         #entry {
             display: flex;
             flex-direction: column;
@@ -90,13 +90,6 @@
             50% { opacity: 0.98; }
         }
 
-        .button-group {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
         .btn {
             padding: 18px 50px;
             border: 2px solid #00FFFF;
@@ -114,25 +107,17 @@
             letter-spacing: 2px;
         }
 
-        .btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 255, 255, 0.1);
-            transition: left 0.3s ease;
-            z-index: -1;
-        }
-
         .btn:hover {
             transform: translateY(-3px) scale(1.03);
             box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
-            text-shadow: 0 0 10px #00FFFF;
         }
 
-        /* ===== DESKTOP SCREEN ===== */
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== DESKTOP ===== */
         #desktop {
             display: grid;
             grid-template-columns: repeat(auto-fill, 100px);
@@ -150,14 +135,13 @@
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
         .file-icon {
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s ease;
             padding: 10px;
+            transition: all 0.2s;
         }
 
         .file-icon:hover {
@@ -174,12 +158,7 @@
             justify-content: center;
             font-size: 28px;
             background: rgba(0, 255, 255, 0.1);
-            transition: all 0.2s ease;
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-        }
-
-        .file-icon:hover .icon-image {
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
         }
 
         .icon-name {
@@ -190,71 +169,253 @@
             letter-spacing: 1px;
         }
 
-        /* ===== WINDOW SYSTEM ===== */
-        #windows-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .window {
-            position: absolute;
-            background: linear-gradient(135deg, #0a0d15 0%, #050709 100%);
-            border: 2px solid #00FFFF;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
-            min-width: 350px;
-            pointer-events: auto;
-            z-index: 10;
-            animation: windowSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes windowSlide {
-            from {
-                opacity: 0;
-                transform: scale(0.85) translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .window-header {
-            padding: 12px 16px;
-            background: linear-gradient(90deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        /* ===== PLANNING SCREEN ===== */
+        #planning {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: move;
-            user-select: none;
+            flex-direction: column;
+            background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
+            padding: 40px;
+            gap: 20px;
+        }
+
+        .planning-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .planning-title {
+            font-size: 2rem;
+            font-weight: 900;
+            text-shadow: 0 0 20px #00FFFF;
+            margin-bottom: 10px;
+        }
+
+        .planning-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .planning-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 20px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Node selector */
+        .node-selector {
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 4px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .node-selector::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .node-selector::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .node-selector::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .selector-label {
+            font-size: 0.9rem;
             font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .window-title {
-            flex: 1;
+        .node-item {
+            padding: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            background: rgba(0, 255, 255, 0.02);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 3px;
+        }
+
+        .node-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #00FFFF;
+        }
+
+        .node-item.selected {
+            background: rgba(0, 255, 0, 0.15);
+            border-color: #00FF00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+        }
+
+        .node-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .node-stats {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            opacity: 0.6;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #00FF00;
+        }
+
+        .stat-value.warning {
+            color: #FFFF00;
+        }
+
+        .stat-value.danger {
+            color: #FF6400;
+        }
+
+        /* Route builder */
+        .route-builder {
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 4px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .builder-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 15px;
             text-transform: uppercase;
         }
 
-        .window-close {
-            cursor: pointer;
-            font-size: 1.2rem;
+        .route-path {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            min-height: 60px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 3px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+
+        .route-node {
+            padding: 8px 12px;
+            background: rgba(0, 255, 255, 0.15);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 3px;
+            white-space: nowrap;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .route-arrow {
+            margin: 0 10px;
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        .route-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 0.8rem;
+        }
+
+        .route-stat {
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 10px;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .route-stat-label {
             opacity: 0.7;
-            transition: opacity 0.2s;
+            font-size: 0.7rem;
+            text-transform: uppercase;
         }
 
-        .window-close:hover {
-            opacity: 1;
+        .route-stat-value {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #00FF00;
+            margin-top: 5px;
         }
 
-        .window-content {
-            padding: 16px;
+        .route-stat-value.warning {
+            color: #FFFF00;
         }
 
-        /* ===== CONNECTION SCREEN ===== */
+        .route-stat-value.danger {
+            color: #FF0000;
+        }
+
+        /* Planning actions */
+        .planning-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 12px 30px;
+            border: 2px solid #00FFFF;
+            background: rgba(0, 255, 255, 0.08);
+            color: #00FFFF;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background: rgba(0, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .action-btn.danger {
+            border-color: #FF6400;
+            color: #FF6400;
+        }
+
+        .action-btn.danger:hover:not(:disabled) {
+            background: rgba(255, 100, 0, 0.15);
+            box-shadow: 0 0 20px rgba(255, 100, 0, 0.5);
+        }
+
+        /* ===== CONNECTION ===== */
         #connection {
             display: flex;
             flex-direction: column;
@@ -272,9 +433,6 @@
             right: 0;
             padding: 20px;
             border-bottom: 2px solid rgba(0, 255, 255, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             z-index: 20;
         }
 
@@ -286,30 +444,20 @@
             color: #00FFFF;
         }
 
+        .connection-status.critical {
+            color: #FF0000;
+            text-shadow: 0 0 10px #FF0000;
+        }
+
         .map-container {
             width: 90vw;
             max-width: 1100px;
             height: 70vh;
             border: 2px solid #00FFFF;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.05);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
             position: relative;
             background: linear-gradient(135deg, rgba(0, 20, 40, 0.9) 0%, rgba(0, 10, 20, 0.9) 100%);
             overflow: hidden;
-        }
-
-        .scan-overlay {
-            position: absolute;
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(to bottom, rgba(0, 255, 255, 0.3), transparent);
-            animation: scanMove 4s linear infinite;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        @keyframes scanMove {
-            0% { top: -20px; }
-            100% { top: 100%; }
         }
 
         #map-svg {
@@ -317,46 +465,6 @@
             height: 100%;
             position: relative;
             z-index: 3;
-        }
-
-        .target-focus-overlay {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 4;
-        }
-
-        .lock-ring {
-            position: absolute;
-            border: 2px solid #00FF00;
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
-            pointer-events: none;
-            z-index: 6;
-            animation: rotateLock 3s linear infinite;
-        }
-
-        @keyframes rotateLock {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .coordinates {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            font-size: 0.7rem;
-            color: #00FF00;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0;
-            animation: coordsFadeIn 0.8s ease 1s forwards;
-        }
-
-        @keyframes coordsFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .connection-info {
@@ -367,9 +475,9 @@
             padding: 15px 20px;
             border-top: 2px solid #00FFFF;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            font-size: 0.85rem;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            font-size: 0.8rem;
             z-index: 10;
             background: linear-gradient(to top, rgba(0, 10, 20, 0.95), transparent);
         }
@@ -382,328 +490,304 @@
         .info-label {
             opacity: 0.7;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            font-size: 0.7rem;
         }
 
         .info-value {
             font-weight: 700;
             color: #00FF00;
-            font-family: 'Courier New', monospace;
         }
 
-        .route-info {
-            position: absolute;
-            bottom: 70px;
-            left: 20px;
-            background: rgba(0, 20, 40, 0.8);
-            border: 1px solid rgba(0, 255, 255, 0.5);
-            padding: 10px 15px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            z-index: 10;
-            max-width: 300px;
+        .info-value.danger {
+            color: #FF0000;
         }
 
-        .route-hop {
-            color: #00FFFF;
-            margin: 2px 0;
-            font-family: 'Courier New', monospace;
-        }
-
-        .route-hop.active {
-            color: #FFFF00;
-            text-shadow: 0 0 10px #FFFF00;
-        }
-
-        /* ===== AUTHENTICATION SCREEN ===== */
-        #auth {
+        /* ===== RESULT ===== */
+        #result {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #05070A 0%, #1a0a1a 100%);
-        }
-
-        .auth-container {
+            background: linear-gradient(135deg, #05070A 0%, #0a1a0a 100%);
+            padding: 40px;
             text-align: center;
+        }
+
+        .result-container {
             z-index: 10;
-            max-width: 600px;
+            max-width: 700px;
         }
 
-        .auth-title {
-            font-size: 2.5rem;
+        .result-title {
+            font-size: 3rem;
             font-weight: 900;
-            margin-bottom: 40px;
-            text-shadow: 0 0 20px #FF0080;
-            letter-spacing: 2px;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
         }
 
-        .auth-status {
+        .result-title.success {
+            color: #00FF00;
+            text-shadow: 0 0 30px #00FF00;
+        }
+
+        .result-title.failure {
+            color: #FF0000;
+            text-shadow: 0 0 30px #FF0000;
+        }
+
+        .result-reason {
             font-size: 1.1rem;
             margin-bottom: 30px;
-            height: 30px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            animation: statusPulse 0.8s infinite;
+            line-height: 1.6;
         }
 
-        @keyframes statusPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        .password-display {
-            background: rgba(0, 255, 255, 0.05);
-            border: 2px solid #00FFFF;
-            padding: 20px;
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            font-family: 'Courier New', monospace;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .password-char {
-            display: inline-block;
-            width: 30px;
-            text-align: center;
-            transition: all 0.1s ease;
-        }
-
-        .password-char.locked {
-            color: #00FF00;
-            text-shadow: 0 0 10px #00FF00;
-        }
-
-        @keyframes charFlip {
-            0% { transform: rotateY(0deg); }
-            50% { transform: rotateY(90deg); }
-            100% { transform: rotateY(0deg); }
-        }
-
-        .crack-progress {
-            margin-top: 30px;
+        .result-analysis {
             text-align: left;
-        }
-
-        .progress-label {
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            opacity: 0.8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: rgba(0, 255, 255, 0.1);
+            background: rgba(0, 255, 255, 0.05);
             border: 1px solid rgba(0, 255, 255, 0.3);
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00FF00, #00FFFF);
-            width: 0%;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px #00FF00;
-        }
-
-        /* ===== DATA EXTRACTION SCREEN ===== */
-        #extraction {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
             padding: 20px;
-            background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
-            overflow: hidden;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            font-size: 0.85rem;
         }
 
-        .extraction-panel {
-            background: linear-gradient(135deg, #0a0d15 0%, #050709 100%);
-            border: 2px solid #00FFFF;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        .analysis-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
 
-        .panel-header {
-            padding: 12px 16px;
-            background: linear-gradient(90deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        .analysis-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .analysis-label {
             font-weight: 700;
+            color: #00FFFF;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
         }
 
-        .panel-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-            font-size: 0.75rem;
-            font-family: 'Courier New', monospace;
-        }
-
-        .log-line {
-            margin: 4px 0;
-            opacity: 0;
-            animation: logFade 0.3s ease forwards;
+        .analysis-value {
+            opacity: 0.8;
             line-height: 1.4;
         }
 
-        @keyframes logFade {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .log-success { color: #00FF00; }
-        .log-warning { color: #FFFF00; }
-        .log-error { color: #FF6600; }
-        .log-info { color: #00FFFF; }
-
-        @media (max-width: 1200px) {
-            #extraction {
-                grid-template-columns: 1fr;
-            }
+        .result-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
         }
     </style>
 </head>
 
 <body>
-    <!-- ===== ENTRY SCREEN ===== -->
+    <!-- ===== ENTRY ===== -->
     <div id="entry" class="screen active">
         <canvas id="bg-canvas"></canvas>
         <div class="entry-content">
             <div class="entry-title">NEXUS-9</div>
-            <div class="button-group">
-                <button class="btn" onclick="ScreenManager.switchScreen('desktop')">
-                    DESKTOP INTERFACE
-                    <span class="btn-subtitle">Full system control</span>
-                </button>
-            </div>
+            <button class="btn" onclick="ScreenManager.switchScreen('desktop')">
+                INITIATE BREACH
+                <span class="btn-subtitle">Plan your attack</span>
+            </button>
         </div>
     </div>
 
-    <!-- ===== DESKTOP SCREEN ===== -->
+    <!-- ===== DESKTOP ===== -->
     <div id="desktop" class="screen">
         <div class="desktop-header">
             <div>SYSTEM DESKTOP</div>
         </div>
-        <div class="file-icon" onclick="DesktopManager.openFile('CONNECTION')">
+        <div class="file-icon" onclick="DesktopManager.openFile()">
             <div class="icon-image">🌐</div>
             <div class="icon-name">EU_NODE.exe</div>
         </div>
     </div>
 
-    <!-- ===== CONNECTION SCREEN ===== -->
+    <!-- ===== PLANNING SCREEN ===== -->
+    <div id="planning" class="screen">
+        <div class="planning-header">
+            <div class="planning-title">ROUTE PLANNING</div>
+            <div class="planning-subtitle">Select nodes and build your attack route</div>
+        </div>
+
+        <div class="planning-content">
+            <!-- Node Selector -->
+            <div class="node-selector" id="node-selector">
+                <div class="selector-label">Available Nodes</div>
+            </div>
+
+            <!-- Route Builder -->
+            <div class="route-builder">
+                <div class="builder-label">Your Route</div>
+                <div class="route-path" id="route-path">
+                    <span class="route-node">TOKYO</span>
+                    <span class="route-arrow">→</span>
+                    <span class="route-node">BERLIN</span>
+                </div>
+
+                <div class="route-stats">
+                    <div class="route-stat">
+                        <div class="route-stat-label">Total Risk</div>
+                        <div class="route-stat-value" id="route-risk">SAFE</div>
+                    </div>
+                    <div class="route-stat">
+                        <div class="route-stat-label">Distance</div>
+                        <div class="route-stat-value" id="route-distance">0km</div>
+                    </div>
+                    <div class="route-stat">
+                        <div class="route-stat-label">Latency</div>
+                        <div class="route-stat-value" id="route-latency">--ms</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="planning-actions">
+            <button class="action-btn" onclick="ScreenManager.switchScreen('desktop')">← CANCEL</button>
+            <button class="action-btn" id="execute-btn" disabled onclick="PlanningSystem.executeRoute()">EXECUTE →</button>
+        </div>
+    </div>
+
+    <!-- ===== CONNECTION ===== -->
     <div id="connection" class="screen">
         <div class="connection-header">
             <div class="connection-status" id="connection-status">INITIALIZING...</div>
         </div>
 
         <div class="map-container">
-            <div class="scan-overlay"></div>
             <svg id="map-svg" viewBox="0 0 1200 600"></svg>
-            <div class="target-focus-overlay" id="target-focus-overlay"></div>
-            <div class="route-info" id="route-info" style="display:none;"></div>
-            <div class="coordinates" id="coordinates"></div>
-
             <div class="connection-info">
-                <div class="info-item">
-                    <span class="info-label">Source</span>
-                    <span class="info-value" id="source-info">TOKYO, JP</span>
-                </div>
                 <div class="info-item">
                     <span class="info-label">Current Hop</span>
                     <span class="info-value" id="current-hop">--</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Latency</span>
-                    <span class="info-value" id="latency-info">--ms</span>
+                    <span class="info-label">Risk Level</span>
+                    <span class="info-value" id="risk-level">--</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Packet Loss</span>
-                    <span class="info-value" id="packet-loss">0%</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Bandwidth</span>
-                    <span class="info-value" id="bandwidth-info">--Mbps</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Route Distance</span>
-                    <span class="info-value" id="route-distance">--km</span>
+                    <span class="info-label">Detection</span>
+                    <span class="info-value" id="detection-level">CLEAR</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== AUTHENTICATION SCREEN ===== -->
-    <div id="auth" class="screen">
-        <div class="auth-container">
-            <div class="auth-title">SECURITY ACCESS</div>
-            <div class="auth-status" id="auth-status">INITIALIZING CRACK...</div>
-            <div class="password-display" id="password-display"></div>
-            <div class="crack-progress">
-                <div class="progress-label">DECRYPTION PROGRESS</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="crack-progress"></div>
-                </div>
-            </div>
-            <div style="margin-top: 20px;">
-                <button class="btn" style="padding: 8px 16px; font-size: 0.9rem;" onclick="ScreenManager.switchScreen('desktop')">← BACK</button>
+    <!-- ===== RESULT ===== -->
+    <div id="result" class="screen">
+        <div class="result-container">
+            <div class="result-title" id="result-title">OPERATION COMPLETE</div>
+            <div class="result-reason" id="result-reason"></div>
+            
+            <div class="result-analysis" id="result-analysis"></div>
+
+            <div class="result-actions">
+                <button class="btn" onclick="ScreenManager.switchScreen('entry')">← RESTART</button>
             </div>
         </div>
     </div>
-
-    <!-- ===== DATA EXTRACTION SCREEN ===== -->
-    <div id="extraction" class="screen">
-        <div class="extraction-panel">
-            <div class="panel-header">REMOTE FILESYSTEM</div>
-            <div class="panel-content" id="log-panel"></div>
-        </div>
-        <div class="extraction-panel">
-            <div class="panel-header">TRANSFER STATUS</div>
-            <div class="panel-content" id="transfer-panel"></div>
-        </div>
-    </div>
-
-    <div id="windows-container"></div>
 
     <script>
-        /* ===== REAL-WORLD NETWORK DATA ===== */
-        const NetworkDatabase = {
+        /* ===== NODE DATABASE (WITH REAL STATS) ===== */
+        const NodeDatabase = {
             nodes: {
-                'TOKYO': { x: 950, y: 250, lat: 35.6762, lon: 139.6503, name: 'TOKYO, JP', role: 'SOURCE' },
-                'BEIJING': { x: 850, y: 220, lat: 39.9042, lon: 116.4074, name: 'BEIJING, CN', role: 'RELAY' },
-                'MOSCOW': { x: 550, y: 180, lat: 55.7558, lon: 37.6173, name: 'MOSCOW, RU', role: 'RELAY' },
-                'BERLIN': { x: 450, y: 150, lat: 52.5200, lon: 13.4050, name: 'BERLIN, DE', role: 'TARGET' },
-                'ISTANBUL': { x: 600, y: 220, lat: 41.0082, lon: 28.9784, name: 'ISTANBUL, TR', role: 'RELAY' },
-                'DUBAI': { x: 700, y: 300, lat: 25.2048, lon: 55.2708, name: 'DUBAI, AE', role: 'RELAY' },
-                'SINGAPORE': { x: 900, y: 380, lat: 1.3521, lon: 103.8198, name: 'SINGAPORE, SG', role: 'RELAY' },
-                'HONG_KONG': { x: 900, y: 300, lat: 22.3193, lon: 114.1694, name: 'HONG KONG, HK', role: 'RELAY' }
+                'TOKYO': { 
+                    x: 950, y: 250, 
+                    lat: 35.6762, lon: 139.6503, 
+                    traffic: 'HIGH',
+                    security: 'STRONG',
+                    risk: 15,
+                    latency: 0,
+                    inaccessible: false,
+                    reason: null
+                },
+                'BEIJING': { 
+                    x: 850, y: 220, 
+                    lat: 39.9042, lon: 116.4074, 
+                    traffic: 'MEDIUM',
+                    security: 'STRONG',
+                    risk: 35,
+                    latency: 85,
+                    inaccessible: false,
+                    reason: null
+                },
+                'MOSCOW': { 
+                    x: 550, y: 180, 
+                    lat: 55.7558, lon: 37.6173, 
+                    traffic: 'LOW',
+                    security: 'CRITICAL',
+                    risk: 70,
+                    latency: 180,
+                    inaccessible: false,
+                    reason: null
+                },
+                'ISTANBUL': { 
+                    x: 600, y: 220, 
+                    lat: 41.0082, lon: 28.9784, 
+                    traffic: 'HIGH',
+                    security: 'MEDIUM',
+                    risk: 40,
+                    latency: 120,
+                    inaccessible: false,
+                    reason: null
+                },
+                'DUBAI': { 
+                    x: 700, y: 300, 
+                    lat: 25.2048, lon: 55.2708, 
+                    traffic: 'VERY_HIGH',
+                    security: 'WEAK',
+                    risk: 25,
+                    latency: 140,
+                    inaccessible: false,
+                    reason: null
+                },
+                'SINGAPORE': { 
+                    x: 900, y: 380, 
+                    lat: 1.3521, lon: 103.8198, 
+                    traffic: 'MEDIUM',
+                    security: 'MEDIUM',
+                    risk: 45,
+                    latency: 220,
+                    inaccessible: false,
+                    reason: null
+                },
+                'FRANKFURT': { 
+                    x: 480, y: 160, 
+                    lat: 50.1109, lon: 8.6821, 
+                    traffic: 'HIGH',
+                    security: 'CRITICAL',
+                    risk: 60,
+                    latency: 200,
+                    inaccessible: false,
+                    reason: null
+                },
+                'BERLIN': { 
+                    x: 450, y: 150, 
+                    lat: 52.5200, lon: 13.4050, 
+                    traffic: 'MEDIUM',
+                    security: 'CRITICAL',
+                    risk: 0,
+                    latency: 0,
+                    inaccessible: false,
+                    reason: null,
+                    isTarget: true
+                }
             },
 
-            generateRoute() {
-                // Generate random route from source to target
-                const relays = ['BEIJING', 'ISTANBUL', 'MOSCOW', 'DUBAI', 'SINGAPORE', 'HONG_KONG'];
-                const shuffled = relays.sort(() => Math.random() - 0.5);
-                const selectedRelays = shuffled.slice(0, Math.floor(Math.random() * 2) + 2);
-                
-                return ['TOKYO', ...selectedRelays, 'BERLIN'];
+            getRiskColor(risk) {
+                if (risk < 30) return '#00FF00';
+                if (risk < 50) return '#FFFF00';
+                return '#FF6400';
             },
 
             calculateDistance(node1, node2) {
-                // Haversine formula for approximate distance
-                const R = 6371; // Earth radius in km
+                const R = 6371;
                 const lat1 = node1.lat * Math.PI / 180;
                 const lat2 = node2.lat * Math.PI / 180;
                 const dLat = (node2.lat - node1.lat) * Math.PI / 180;
@@ -714,6 +798,76 @@
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
                 
                 return Math.round(R * c);
+            }
+        };
+
+        /* ===== GAME STATE ===== */
+        const GameState = {
+            selectedRoute: ['TOKYO'],
+            routeDetails: {
+                totalDistance: 0,
+                totalLatency: 0,
+                totalRisk: 0,
+                nodeSequence: []
+            },
+
+            addNodeToRoute(nodeName) {
+                if (this.selectedRoute.includes(nodeName)) {
+                    this.selectedRoute = this.selectedRoute.filter(n => n !== nodeName);
+                } else if (nodeName !== 'BERLIN' && nodeName !== 'TOKYO') {
+                    this.selectedRoute.splice(this.selectedRoute.length - 1, 0, nodeName);
+                }
+                this.recalculateRoute();
+            },
+
+            recalculateRoute() {
+                let totalDistance = 0;
+                let totalLatency = 0;
+                let totalRisk = 0;
+
+                for (let i = 0; i < this.selectedRoute.length - 1; i++) {
+                    const from = NodeDatabase.nodes[this.selectedRoute[i]];
+                    const to = NodeDatabase.nodes[this.selectedRoute[i + 1]];
+                    
+                    totalDistance += NodeDatabase.calculateDistance(from, to);
+                    totalLatency += to.latency;
+                    totalRisk += to.risk;
+                }
+
+                this.routeDetails = {
+                    totalDistance,
+                    totalLatency,
+                    totalRisk,
+                    nodeSequence: this.selectedRoute
+                };
+
+                // Validate route
+                this.validateRoute();
+            },
+
+            validateRoute() {
+                const route = this.selectedRoute;
+                if (route[route.length - 1] !== 'BERLIN') {
+                    document.getElementById('execute-btn').disabled = true;
+                    return;
+                }
+
+                // Check for critical nodes
+                let criticalCount = 0;
+                for (let i = 1; i < route.length - 1; i++) {
+                    const node = NodeDatabase.nodes[route[i]];
+                    if (node.security === 'CRITICAL') {
+                        criticalCount++;
+                    }
+                }
+
+                // You can have at most 1 critical node
+                if (criticalCount > 1) {
+                    document.getElementById('execute-btn').disabled = true;
+                    return;
+                }
+
+                document.getElementById('execute-btn').disabled = false;
             }
         };
 
@@ -731,76 +885,294 @@
                     next.classList.add('active');
                     this.current = target;
                     
-                    if (target === 'connection') {
-                        CinematicFlow.start();
-                    } else if (target === 'auth') {
-                        AuthSystem.init();
-                    } else if (target === 'extraction') {
-                        DataExtraction.init();
+                    if (target === 'planning') {
+                        PlanningSystem.init();
+                    } else if (target === 'connection') {
+                        ConnectionSimulation.start();
                     }
                 }, 300);
             }
         };
 
-        /* ===== DESKTOP MANAGER ===== */
-        const DesktopManager = {
-            openFile(type) {
-                const info = {
-                    'CONNECTION': { title: 'EU_NODE.exe', content: 'Accessing remote node...' }
-                };
+        /* ===== PLANNING SYSTEM ===== */
+        const PlanningSystem = {
+            init() {
+                GameState.selectedRoute = ['TOKYO'];
+                this.renderNodeSelector();
+                this.updateRouteDisplay();
+            },
 
-                const config = info[type];
-                if (config) {
-                    this.createWindow(config.title, config.content);
-                    setTimeout(() => ScreenManager.switchScreen('connection'), 1500);
+            renderNodeSelector() {
+                const selector = document.getElementById('node-selector');
+                const nodeItems = selector.querySelectorAll('.node-item');
+                nodeItems.forEach(item => item.remove());
+
+                const nodeList = Object.keys(NodeDatabase.nodes)
+                    .filter(key => key !== 'TOKYO' && key !== 'BERLIN')
+                    .sort();
+
+                nodeList.forEach(nodeName => {
+                    const node = NodeDatabase.nodes[nodeName];
+                    const html = `
+                        <div class="node-item" onclick="PlanningSystem.selectNode('${nodeName}')">
+                            <div class="node-name">${nodeName}</div>
+                            <div class="node-stats">
+                                <div class="stat-row">
+                                    <span class="stat-label">Risk:</span>
+                                    <span class="stat-value ${node.risk > 50 ? 'danger' : node.risk > 30 ? 'warning' : ''}">${node.risk}%</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span class="stat-label">Sec:</span>
+                                    <span class="stat-value">${node.security.charAt(0)}</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span class="stat-label">Traffic:</span>
+                                    <span class="stat-value">${node.traffic.charAt(0)}</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span class="stat-label">Latency:</span>
+                                    <span class="stat-value">${node.latency}ms</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    selector.insertAdjacentHTML('beforeend', html);
+                });
+            },
+
+            selectNode(nodeName) {
+                GameState.addNodeToRoute(nodeName);
+                this.updateRouteDisplay();
+                this.highlightSelection();
+            },
+
+            highlightSelection() {
+                document.querySelectorAll('.node-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                GameState.selectedRoute.forEach(nodeName => {
+                    document.querySelectorAll('.node-item').forEach(item => {
+                        if (item.textContent.includes(nodeName)) {
+                            item.classList.add('selected');
+                        }
+                    });
+                });
+            },
+
+            updateRouteDisplay() {
+                const route = GameState.selectedRoute;
+                const details = GameState.routeDetails;
+
+                let routePath = '';
+                for (let i = 0; i < route.length; i++) {
+                    routePath += `<span class="route-node">${route[i]}</span>`;
+                    if (i < route.length - 1) {
+                        routePath += `<span class="route-arrow">→</span>`;
+                    }
+                }
+                document.getElementById('route-path').innerHTML = routePath;
+
+                // Update stats
+                document.getElementById('route-distance').textContent = details.totalDistance + 'km';
+                document.getElementById('route-latency').textContent = details.totalLatency + 'ms';
+
+                const riskLevel = details.totalRisk;
+                const riskElement = document.getElementById('route-risk');
+                if (riskLevel < 100) {
+                    riskElement.textContent = 'SAFE';
+                    riskElement.style.color = '#00FF00';
+                } else if (riskLevel < 200) {
+                    riskElement.textContent = 'MODERATE';
+                    riskElement.style.color = '#FFFF00';
+                } else {
+                    riskElement.textContent = 'CRITICAL';
+                    riskElement.style.color = '#FF0000';
                 }
             },
 
-            createWindow(title, content) {
-                const container = document.getElementById('windows-container');
-                const win = document.createElement('div');
-                win.className = 'window';
-                win.style.left = '50px';
-                win.style.top = '50px';
+            executeRoute() {
+                ScreenManager.switchScreen('connection');
+            }
+        };
 
-                win.innerHTML = `
-                    <div class="window-header">
-                        <div class="window-title">${title}</div>
-                        <div class="window-close">×</div>
-                    </div>
-                    <div class="window-content">${content}</div>
-                `;
+        /* ===== CONNECTION SIMULATION ===== */
+        const ConnectionSimulation = {
+            currentHop: 0,
+            route: GameState.selectedRoute,
+            totalRisk: 0,
+            detectionLevel: 0,
 
-                this.makeWindowDraggable(win);
-                container.appendChild(win);
+            async start() {
+                this.route = GameState.selectedRoute;
+                this.currentHop = 0;
+                this.totalRisk = 0;
+                this.detectionLevel = 0;
 
-                win.querySelector('.window-close').addEventListener('click', () => {
-                    win.remove();
-                });
+                this.drawNetwork();
+                await this.traverseRoute();
             },
 
-            makeWindowDraggable(win) {
-                let offsetX = 0;
-                let offsetY = 0;
-                const header = win.querySelector('.window-header');
+            drawNetwork() {
+                const svg = document.getElementById('map-svg');
+                svg.innerHTML = '';
 
-                header.addEventListener('mousedown', (e) => {
-                    offsetX = e.clientX - win.offsetLeft;
-                    offsetY = e.clientY - win.offsetTop;
-
-                    const onMouseMove = (e) => {
-                        win.style.left = (e.clientX - offsetX) + 'px';
-                        win.style.top = (e.clientY - offsetY) + 'px';
-                    };
-
-                    const onMouseUp = () => {
-                        document.removeEventListener('mousemove', onMouseMove);
-                        document.removeEventListener('mouseup', onMouseUp);
-                    };
-
-                    document.addEventListener('mousemove', onMouseMove);
-                    document.addEventListener('mouseup', onMouseUp);
+                // Draw all nodes
+                Object.keys(NodeDatabase.nodes).forEach(key => {
+                    const node = NodeDatabase.nodes[key];
+                    this.drawNode(svg, node, key);
                 });
+
+                // Draw route path
+                for (let i = 0; i < this.route.length - 1; i++) {
+                    const from = NodeDatabase.nodes[this.route[i]];
+                    const to = NodeDatabase.nodes[this.route[i + 1]];
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', from.x);
+                    line.setAttribute('y1', from.y);
+                    line.setAttribute('x2', to.x);
+                    line.setAttribute('y2', to.y);
+                    line.setAttribute('stroke', 'rgba(0, 255, 255, 0.3)');
+                    line.setAttribute('stroke-width', '2');
+                    svg.appendChild(line);
+                }
+            },
+
+            drawNode(svg, node, key) {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', node.x);
+                circle.setAttribute('cy', node.y);
+                circle.setAttribute('r', '8');
+
+                let color = '#00FFFF';
+                if (key === 'TOKYO') color = '#00FF00';
+                if (key === 'BERLIN') color = '#FF0000';
+                if (this.route.includes(key) && key !== 'TOKYO' && key !== 'BERLIN') {
+                    color = '#FFFF00';
+                }
+
+                circle.setAttribute('fill', color);
+                circle.setAttribute('opacity', '0.7');
+                svg.appendChild(circle);
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', node.x);
+                text.setAttribute('y', node.y - 20);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('fill', color);
+                text.setAttribute('font-size', '11');
+                text.setAttribute('font-weight', 'bold');
+                text.textContent = key;
+                svg.appendChild(text);
+            },
+
+            async traverseRoute() {
+                const route = this.route;
+
+                for (let i = 1; i < route.length; i++) {
+                    const nodeName = route[i];
+                    const node = NodeDatabase.nodes[nodeName];
+
+                    document.getElementById('connection-status').textContent = 
+                        `TRAVERSING: ${route[i-1]} → ${nodeName}`;
+                    document.getElementById('current-hop').textContent = nodeName;
+
+                    // Add risk
+                    this.totalRisk += node.risk;
+                    this.detectionLevel = Math.min(this.totalRisk / 10, 100);
+
+                    // Update display
+                    const riskEl = document.getElementById('risk-level');
+                    if (this.detectionLevel < 30) {
+                        riskEl.textContent = 'LOW';
+                        riskEl.className = 'info-value';
+                    } else if (this.detectionLevel < 70) {
+                        riskEl.textContent = 'MEDIUM';
+                        riskEl.className = 'info-value warning';
+                    } else {
+                        riskEl.textContent = 'HIGH';
+                        riskEl.className = 'info-value danger';
+                    }
+
+                    document.getElementById('detection-level').textContent = 
+                        Math.round(this.detectionLevel) + '%';
+
+                    // Check for detection
+                    if (this.detectionLevel > 85) {
+                        await new Promise(res => setTimeout(res, 1500));
+                        this.failMission(`Detection threshold exceeded at ${nodeName}`);
+                        return;
+                    }
+
+                    // Check for critical security
+                    if (node.security === 'CRITICAL' && Math.random() < 0.4) {
+                        await new Promise(res => setTimeout(res, 1500));
+                        this.failMission(`${nodeName} security system triggered`);
+                        return;
+                    }
+
+                    await new Promise(res => setTimeout(res, 2000));
+                }
+
+                this.successMission();
+            },
+
+            successMission() {
+                const analysisHTML = `
+                    <div class="analysis-item">
+                        <div class="analysis-label">Route Chosen</div>
+                        <div class="analysis-value">${GameState.selectedRoute.join(' → ')}</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Total Risk Accumulated</div>
+                        <div class="analysis-value">${this.totalRisk}% (Below threshold: 100%)</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Detection Level</div>
+                        <div class="analysis-value">${Math.round(this.detectionLevel)}% (Safe)</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Decision Quality</div>
+                        <div class="analysis-value">Excellent route planning. You selected the optimal path with minimal security exposure.</div>
+                    </div>
+                `;
+
+                document.getElementById('result-title').textContent = 'MISSION SUCCESS';
+                document.getElementById('result-title').className = 'result-title success';
+                document.getElementById('result-reason').textContent = 
+                    'You successfully breached EU_NODE through careful route planning and risk management.';
+                document.getElementById('result-analysis').innerHTML = analysisHTML;
+
+                ScreenManager.switchScreen('result');
+            },
+
+            failMission(reason) {
+                const analysisHTML = `
+                    <div class="analysis-item">
+                        <div class="analysis-label">Failure Reason</div>
+                        <div class="analysis-value">${reason}</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Route Chosen</div>
+                        <div class="analysis-value">${GameState.selectedRoute.join(' → ')}</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Risk Accumulated</div>
+                        <div class="analysis-value">${this.totalRisk}%</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">What Went Wrong</div>
+                        <div class="analysis-value">Your route triggered security systems. Consider avoiding CRITICAL security nodes or reducing overall risk by choosing alternative paths.</div>
+                    </div>
+                `;
+
+                document.getElementById('result-title').textContent = 'MISSION FAILED';
+                document.getElementById('result-title').className = 'result-title failure';
+                document.getElementById('result-reason').textContent = 
+                    'Your breach attempt was detected and intercepted.';
+                document.getElementById('result-analysis').innerHTML = analysisHTML;
+
+                ScreenManager.switchScreen('result');
             }
         };
 
@@ -827,12 +1199,6 @@
                 }
 
                 this.animate();
-                window.addEventListener('resize', () => this.onResize());
-            },
-
-            onResize() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
             },
 
             animate() {
@@ -872,409 +1238,10 @@
             }
         };
 
-        /* ===== CINEMATIC FLOW (REALWORLD VERSION) ===== */
-        const CinematicFlow = {
-            route: [],
-            currentHopIndex: 0,
-            totalDistance: 0,
-            baseLatency: 0,
-            packetLoss: 0,
-
-            async start() {
-                this.route = NetworkDatabase.generateRoute();
-                this.calculateMetrics();
-                
-                await this.phase1();
-                await this.phase2();
-                await this.phase3();
-                await this.phase4();
-                await this.phase5();
-                await this.phase6();
-            },
-
-            calculateMetrics() {
-                let distance = 0;
-                for (let i = 0; i < this.route.length - 1; i++) {
-                    const from = NetworkDatabase.nodes[this.route[i]];
-                    const to = NetworkDatabase.nodes[this.route[i + 1]];
-                    distance += NetworkDatabase.calculateDistance(from, to);
-                }
-                this.totalDistance = distance;
-                this.baseLatency = Math.round(distance / 130); // ~130km per ms
-                this.packetLoss = Math.floor(Math.random() * 3);
-            },
-
-            wait(ms) {
-                return new Promise(res => setTimeout(res, ms));
-            },
-
-            async phase1() {
-                const status = document.getElementById('connection-status');
-                status.textContent = 'INITIALIZING...';
-                await this.wait(2000);
-            },
-
-            async phase2() {
-                const status = document.getElementById('connection-status');
-                status.textContent = 'SCANNING GLOBAL NETWORK...';
-                this.drawWorldMap();
-                this.displayRoute();
-                await this.wait(3000);
-            },
-
-            async phase3() {
-                const status = document.getElementById('connection-status');
-                status.textContent = 'ROUTE ESTABLISHED';
-                document.getElementById('route-info').style.display = 'block';
-                await this.wait(2000);
-            },
-
-            async phase4() {
-                const status = document.getElementById('connection-status');
-                status.textContent = 'TRAVERSING PATH...';
-                await this.animateRouteTraversal();
-            },
-
-            async phase5() {
-                const status = document.getElementById('connection-status');
-                status.textContent = 'LOCK ACQUIRED';
-                
-                const targetNode = NetworkDatabase.nodes['BERLIN'];
-                const container = document.querySelector('.map-container');
-                const scale = container.clientWidth / 1200;
-                
-                const lockX = targetNode.x * scale;
-                const lockY = targetNode.y * scale;
-
-                const lock = document.createElement('div');
-                lock.className = 'lock-ring';
-                lock.style.width = '80px';
-                lock.style.height = '80px';
-                lock.style.left = (lockX - 40) + 'px';
-                lock.style.top = (lockY - 40) + 'px';
-                container.appendChild(lock);
-
-                document.getElementById('coordinates').textContent = 
-                    `${targetNode.lat.toFixed(4)}°N ${targetNode.lon.toFixed(4)}°E`;
-
-                await this.wait(3000);
-            },
-
-            async phase6() {
-                const status = document.getElementById('connection-status');
-                status.textContent = 'ACCESS GRANTED';
-                status.style.color = '#00FF00';
-                status.style.textShadow = '0 0 20px #00FF00';
-                await this.wait(1500);
-                ScreenManager.switchScreen('auth');
-            },
-
-            drawWorldMap() {
-                const svg = document.getElementById('map-svg');
-                svg.innerHTML = '';
-
-                // Draw continents as outlines
-                const continents = [
-                    { label: 'NORTH AMERICA', x: 150, y: 150 },
-                    { label: 'EUROPE', x: 450, y: 100 },
-                    { label: 'ASIA', x: 800, y: 200 },
-                    { label: 'AUSTRALIA', x: 600, y: 400 }
-                ];
-
-                continents.forEach(cont => {
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.setAttribute('cx', cont.x);
-                    circle.setAttribute('cy', cont.y);
-                    circle.setAttribute('r', '70');
-                    circle.setAttribute('fill', 'none');
-                    circle.setAttribute('stroke', 'rgba(0, 255, 100, 0.2)');
-                    circle.setAttribute('stroke-width', '1.5');
-                    circle.setAttribute('stroke-dasharray', '5,5');
-                    svg.appendChild(circle);
-
-                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    text.setAttribute('x', cont.x);
-                    text.setAttribute('y', cont.y + 85);
-                    text.setAttribute('text-anchor', 'middle');
-                    text.setAttribute('fill', 'rgba(0, 255, 100, 0.3)');
-                    text.setAttribute('font-size', '10');
-                    text.textContent = cont.label;
-                    svg.appendChild(text);
-                });
-
-                // Draw all nodes
-                Object.keys(NetworkDatabase.nodes).forEach(key => {
-                    const node = NetworkDatabase.nodes[key];
-                    this.drawNode(svg, node, key);
-                });
-            },
-
-            drawNode(svg, node, key) {
-                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                circle.setAttribute('cx', node.x);
-                circle.setAttribute('cy', node.y);
-                circle.setAttribute('r', '5');
-                circle.setAttribute('fill', node.role === 'TARGET' ? '#FF0000' : node.role === 'SOURCE' ? '#00FF00' : 'rgba(0, 255, 255, 0.4)');
-                circle.setAttribute('opacity', '0.6');
-                circle.style.filter = `drop-shadow(0 0 5px ${node.role === 'TARGET' ? '#FF0000' : node.role === 'SOURCE' ? '#00FF00' : '#00FFFF'})`;
-                svg.appendChild(circle);
-
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', node.x);
-                text.setAttribute('y', node.y - 15);
-                text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('fill', '#00FFFF');
-                text.setAttribute('font-size', '10');
-                text.setAttribute('font-weight', 'bold');
-                text.textContent = key;
-                svg.appendChild(text);
-            },
-
-            displayRoute() {
-                const svg = document.getElementById('map-svg');
-                const routeInfo = document.getElementById('route-info');
-                
-                let routeHTML = '<strong>ROUTE PATH:</strong><br>';
-                let totalDist = 0;
-
-                for (let i = 0; i < this.route.length; i++) {
-                    const current = this.route[i];
-                    routeHTML += `<div class="route-hop" id="hop-${i}">[${i}] ${current}</div>`;
-
-                    if (i < this.route.length - 1) {
-                        const next = this.route[i + 1];
-                        const fromNode = NetworkDatabase.nodes[current];
-                        const toNode = NetworkDatabase.nodes[next];
-                        
-                        const dist = NetworkDatabase.calculateDistance(fromNode, toNode);
-                        totalDist += dist;
-
-                        // Draw path line
-                        const path = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        path.setAttribute('x1', fromNode.x);
-                        path.setAttribute('y1', fromNode.y);
-                        path.setAttribute('x2', toNode.x);
-                        path.setAttribute('y2', toNode.y);
-                        path.setAttribute('stroke', 'rgba(0, 255, 255, 0.3)');
-                        path.setAttribute('stroke-width', '1.5');
-                        path.setAttribute('stroke-dasharray', '5,5');
-                        path.style.animation = 'pathDash 20s linear infinite';
-                        svg.appendChild(path);
-                    }
-                }
-
-                routeInfo.innerHTML = routeHTML + `<div style="margin-top:10px;color:#00FF00;"><strong>TOTAL: ${totalDist}km</strong></div>`;
-
-                const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-                style.textContent = `
-                    @keyframes pathDash { to { stroke-dashoffset: -10; } }
-                `;
-                svg.appendChild(style);
-            },
-
-            async animateRouteTraversal() {
-                const svg = document.getElementById('map-svg');
-                
-                for (let i = 0; i < this.route.length - 1; i++) {
-                    const from = NetworkDatabase.nodes[this.route[i]];
-                    const to = NetworkDatabase.nodes[this.route[i + 1]];
-                    
-                    document.getElementById('current-hop').textContent = this.route[i];
-                    document.getElementById(`hop-${i}`).classList.add('active');
-
-                    await this.animatePacketFlow(from, to, svg);
-                    await this.wait(800);
-                }
-            },
-
-            animatePacketFlow(from, to, svg) {
-                return new Promise(resolve => {
-                    let progress = 0;
-                    const packets = 3;
-
-                    const animate = () => {
-                        progress += 0.02;
-
-                        for (let p = 0; p < packets; p++) {
-                            const delay = p * 0.15;
-                            const effectiveProgress = Math.max(0, progress - delay);
-
-                            if (effectiveProgress > 0 && effectiveProgress <= 1) {
-                                const x = from.x + (to.x - from.x) * effectiveProgress;
-                                const y = from.y + (to.y - from.y) * effectiveProgress;
-
-                                // Remove old packet
-                                const old = document.getElementById(`packet-${p}`);
-                                if (old) old.remove();
-
-                                const packet = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                                packet.id = `packet-${p}`;
-                                packet.setAttribute('cx', x);
-                                packet.setAttribute('cy', y);
-                                packet.setAttribute('r', '3');
-                                packet.setAttribute('fill', '#FFFF00');
-                                packet.style.filter = `drop-shadow(0 0 8px #FFFF00)`;
-                                packet.style.opacity = (1 - effectiveProgress * 0.3).toString();
-                                svg.appendChild(packet);
-                            }
-                        }
-
-                        if (progress <= 1) {
-                            requestAnimationFrame(animate);
-                        } else {
-                            document.querySelectorAll('[id^="packet-"]').forEach(p => p.remove());
-                            
-                            // Update latency and loss
-                            const dist = NetworkDatabase.calculateDistance(from, to);
-                            const hopLatency = Math.round(dist / 130);
-                            document.getElementById('latency-info').textContent = 
-                                (this.baseLatency + Math.random() * 50).toFixed(0) + 'ms';
-                            
-                            if (Math.random() < 0.2) {
-                                this.packetLoss += Math.floor(Math.random() * 2) + 1;
-                                document.getElementById('packet-loss').textContent = this.packetLoss + '%';
-                            }
-
-                            resolve();
-                        }
-                    };
-
-                    animate();
-                });
-            }
-        };
-
-        /* ===== AUTHENTICATION SYSTEM ===== */
-        const AuthSystem = {
-            correctPassword: '',
-            crackProgress: 0,
-
-            init() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                this.correctPassword = '';
-                for (let i = 0; i < 12; i++) {
-                    this.correctPassword += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-
-                this.crackProgress = 0;
-                this.startCracking();
-            },
-
-            startCracking() {
-                const statusEl = document.getElementById('auth-status');
-                const displayEl = document.getElementById('password-display');
-                const progressEl = document.getElementById('crack-progress');
-
-                statusEl.textContent = 'BRUTE FORCE ATTEMPT...';
-
-                const crackInterval = setInterval(() => {
-                    this.crackProgress += Math.random() * 12;
-                    if (this.crackProgress >= 100) this.crackProgress = 100;
-
-                    progressEl.style.width = this.crackProgress + '%';
-
-                    displayEl.innerHTML = '';
-                    for (let i = 0; i < 12; i++) {
-                        const span = document.createElement('span');
-                        span.className = 'password-char';
-
-                        const progress = Math.min(this.crackProgress / 100 * 1.2, 1);
-                        if (i < progress * 12) {
-                            span.textContent = this.correctPassword[i];
-                            span.classList.add('locked');
-                        } else {
-                            span.textContent = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-                        }
-                        displayEl.appendChild(span);
-                    }
-
-                    if (this.crackProgress >= 100) {
-                        clearInterval(crackInterval);
-                        statusEl.textContent = 'KEY MATCH FOUND';
-                        
-                        displayEl.innerHTML = '';
-                        for (let i = 0; i < 12; i++) {
-                            const span = document.createElement('span');
-                            span.className = 'password-char locked';
-                            span.textContent = this.correctPassword[i];
-                            displayEl.appendChild(span);
-                        }
-
-                        setTimeout(() => {
-                            statusEl.textContent = 'DECRYPTION COMPLETE';
-                            statusEl.style.color = '#00FF00';
-                            setTimeout(() => {
-                                ScreenManager.switchScreen('extraction');
-                            }, 1500);
-                        }, 1000);
-                    }
-                }, 80);
-            }
-        };
-
-        /* ===== DATA EXTRACTION ===== */
-        const DataExtraction = {
-            init() {
-                this.startLogging();
-                this.startTransfers();
-            },
-
-            startLogging() {
-                const logs = [
-                    { type: 'info', text: '[INIT] Mounting remote filesystem...' },
-                    { type: 'success', text: '[✓] Root directory accessed' },
-                    { type: 'warning', text: '[!] Encrypted partitions detected' },
-                    { type: 'info', text: '[AUTH] Bypassing encryption...' },
-                    { type: 'success', text: '[✓] Keys obtained' },
-                    { type: 'info', text: '[EXTRACT] Exfiltrating data...' },
-                    { type: 'success', text: '[✓] Transfer complete' }
-                ];
-
-                logs.forEach((log, idx) => {
-                    setTimeout(() => {
-                        const panel = document.getElementById('log-panel');
-                        const line = document.createElement('div');
-                        line.className = `log-line log-${log.type}`;
-                        line.textContent = log.text;
-                        panel.appendChild(line);
-                        panel.scrollTop = panel.scrollHeight;
-                    }, idx * 600);
-                });
-            },
-
-            startTransfers() {
-                const files = [
-                    { name: 'DATABASE_BACKUP.sql', size: 2.4, duration: 8 },
-                    { name: 'USER_RECORDS.zip', size: 1.8, duration: 6 }
-                ];
-
-                const container = document.getElementById('transfer-panel');
-
-                files.forEach((file, idx) => {
-                    setTimeout(() => {
-                        const div = document.createElement('div');
-                        div.innerHTML = `
-                            <div style="font-size:0.8rem;margin:10px 0 5px 0;color:#FFFF00;">${file.name}</div>
-                            <div style="height:6px;background:rgba(0,255,255,0.1);border:1px solid rgba(0,255,255,0.3);overflow:hidden;">
-                                <div style="height:100%;background:linear-gradient(90deg,#00FF00,#00FFFF);width:0%;transition:width 0.2s;" class="transfer-progress"></div>
-                            </div>
-                            <div style="font-size:0.7rem;color:#00FF00;margin-top:3px;" class="transfer-speed">0%</div>
-                        `;
-                        container.appendChild(div);
-
-                        let progress = 0;
-                        const interval = setInterval(() => {
-                            progress += 100 / (file.duration * 10);
-                            if (progress >= 100) progress = 100;
-
-                            div.querySelector('.transfer-progress').style.width = progress + '%';
-                            div.querySelector('.transfer-speed').textContent = 
-                                (file.size * progress / 100 / (file.duration * 0.1)).toFixed(1) + ' MB/s | ' + progress.toFixed(0) + '%';
-
-                            if (progress >= 100) clearInterval(interval);
-                        }, 100);
-                    }, idx * 1200);
-                });
+        /* ===== DESKTOP MANAGER ===== */
+        const DesktopManager = {
+            openFile() {
+                setTimeout(() => ScreenManager.switchScreen('planning'), 1500);
             }
         };
 
@@ -1283,10 +1250,6 @@
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') ScreenManager.switchScreen('entry');
-        });
-
-        window.addEventListener('resize', () => {
-            if (NetworkBackground.canvas) NetworkBackground.onResize();
         });
     </script>
 </body>
