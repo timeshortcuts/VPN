@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,9 +12,12 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
         body {
-            width: 100vw;
-            height: 100vh;
             background: #05070A;
             color: #00FFFF;
             font-family: 'Orbitron', monospace;
@@ -61,6 +64,7 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
+            overflow: hidden;
         }
 
         #bg-canvas {
@@ -125,6 +129,7 @@
             padding: 40px;
             background: linear-gradient(135deg, #05070A 0%, #0a0d1a 100%);
             align-content: start;
+            overflow: auto;
         }
 
         .desktop-header {
@@ -169,18 +174,22 @@
             letter-spacing: 1px;
         }
 
-        /* ===== PLANNING SCREEN ===== */
+        /* ===== PLANNING SCREEN (SCROLLABLE) ===== */
         #planning {
             display: flex;
             flex-direction: column;
             background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
-            padding: 40px;
-            gap: 20px;
+            overflow: hidden;
+            position: relative;
         }
 
         .planning-header {
+            flex-shrink: 0;
             text-align: center;
-            margin-bottom: 20px;
+            padding: 30px 40px;
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+            background: linear-gradient(to bottom, rgba(0, 255, 255, 0.05), transparent);
+            z-index: 5;
         }
 
         .planning-title {
@@ -196,11 +205,33 @@
         }
 
         .planning-content {
+            flex: 1;
             display: grid;
             grid-template-columns: 1fr 1.2fr;
             gap: 20px;
-            flex: 1;
-            overflow: hidden;
+            padding: 20px;
+            overflow: auto;
+            min-height: 0;
+        }
+
+        /* Scrollbar styling for planning-content */
+        .planning-content::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .planning-content::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .planning-content::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 6px;
+            border: 2px solid rgba(0, 255, 255, 0.05);
+        }
+
+        .planning-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 255, 0.5);
         }
 
         /* Node selector */
@@ -210,7 +241,7 @@
             border-radius: 4px;
             padding: 20px;
             overflow-y: auto;
-            max-height: 60vh;
+            overflow-x: hidden;
         }
 
         .node-selector::-webkit-scrollbar {
@@ -232,6 +263,11 @@
             margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: sticky;
+            top: 0;
+            background: rgba(0, 255, 255, 0.05);
+            padding: 10px 0;
+            z-index: 2;
         }
 
         .node-item {
@@ -298,6 +334,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .builder-label {
@@ -305,13 +342,15 @@
             font-weight: 700;
             margin-bottom: 15px;
             text-transform: uppercase;
+            flex-shrink: 0;
         }
 
         .route-path {
-            flex: 1;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
+            gap: 8px;
             margin-bottom: 20px;
             min-height: 60px;
             background: rgba(0, 0, 0, 0.3);
@@ -320,6 +359,20 @@
             border: 1px solid rgba(0, 255, 255, 0.2);
             font-size: 0.85rem;
             overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .route-path::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .route-path::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .route-path::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 3px;
         }
 
         .route-node {
@@ -333,17 +386,18 @@
         }
 
         .route-arrow {
-            margin: 0 10px;
             opacity: 0.5;
             flex-shrink: 0;
+            font-weight: bold;
         }
 
         .route-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-top: 15px;
+            margin-top: auto;
             font-size: 0.8rem;
+            flex-shrink: 0;
         }
 
         .route-stat {
@@ -376,10 +430,14 @@
 
         /* Planning actions */
         .planning-actions {
+            flex-shrink: 0;
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 20px;
+            padding: 20px 40px;
+            border-top: 2px solid rgba(0, 255, 255, 0.3);
+            background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.05));
+            z-index: 5;
         }
 
         .action-btn {
@@ -423,7 +481,7 @@
             align-items: center;
             background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
             position: relative;
-            padding: 40px;
+            overflow: hidden;
         }
 
         .connection-header {
@@ -512,6 +570,7 @@
             background: linear-gradient(135deg, #05070A 0%, #0a1a0a 100%);
             padding: 40px;
             text-align: center;
+            overflow: auto;
         }
 
         .result-container {
@@ -581,6 +640,36 @@
             display: flex;
             gap: 15px;
             justify-content: center;
+        }
+
+        /* Responsive for smaller screens */
+        @media (max-width: 1200px) {
+            .planning-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .planning-header {
+                padding: 20px;
+            }
+
+            .planning-title {
+                font-size: 1.5rem;
+            }
+
+            .planning-content {
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .planning-actions {
+                padding: 15px 20px;
+            }
+
+            .entry-title {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
@@ -694,7 +783,7 @@
     </div>
 
     <script>
-        /* ===== NODE DATABASE (WITH REAL STATS) ===== */
+        /* ===== NODE DATABASE ===== */
         const NodeDatabase = {
             nodes: {
                 'TOKYO': { 
@@ -704,8 +793,7 @@
                     security: 'STRONG',
                     risk: 15,
                     latency: 0,
-                    inaccessible: false,
-                    reason: null
+                    inaccessible: false
                 },
                 'BEIJING': { 
                     x: 850, y: 220, 
@@ -714,8 +802,7 @@
                     security: 'STRONG',
                     risk: 35,
                     latency: 85,
-                    inaccessible: false,
-                    reason: null
+                    inaccessible: false
                 },
                 'MOSCOW': { 
                     x: 550, y: 180, 
@@ -724,8 +811,7 @@
                     security: 'CRITICAL',
                     risk: 70,
                     latency: 180,
-                    inaccessible: false,
-                    reason: null
+                    inaccessible: false
                 },
                 'ISTANBUL': { 
                     x: 600, y: 220, 
@@ -734,8 +820,7 @@
                     security: 'MEDIUM',
                     risk: 40,
                     latency: 120,
-                    inaccessible: false,
-                    reason: null
+                    inaccessible: false
                 },
                 'DUBAI': { 
                     x: 700, y: 300, 
@@ -744,8 +829,7 @@
                     security: 'WEAK',
                     risk: 25,
                     latency: 140,
-                    inaccessible: false,
-                    reason: null
+                    inaccessible: false
                 },
                 'SINGAPORE': { 
                     x: 900, y: 380, 
@@ -754,8 +838,7 @@
                     security: 'MEDIUM',
                     risk: 45,
                     latency: 220,
-                    inaccessible: false,
-                    reason: null
+                    inaccessible: false
                 },
                 'FRANKFURT': { 
                     x: 480, y: 160, 
@@ -764,8 +847,34 @@
                     security: 'CRITICAL',
                     risk: 60,
                     latency: 200,
-                    inaccessible: false,
-                    reason: null
+                    inaccessible: false
+                },
+                'AMSTERDAM': {
+                    x: 470, y: 140,
+                    lat: 52.3676, lon: 4.9041,
+                    traffic: 'MEDIUM',
+                    security: 'MEDIUM',
+                    risk: 35,
+                    latency: 190,
+                    inaccessible: false
+                },
+                'LONDON': {
+                    x: 410, y: 130,
+                    lat: 51.5074, lon: -0.1278,
+                    traffic: 'HIGH',
+                    security: 'MEDIUM',
+                    risk: 38,
+                    latency: 210,
+                    inaccessible: false
+                },
+                'PARIS': {
+                    x: 440, y: 145,
+                    lat: 48.8566, lon: 2.3522,
+                    traffic: 'MEDIUM',
+                    security: 'STRONG',
+                    risk: 42,
+                    latency: 205,
+                    inaccessible: false
                 },
                 'BERLIN': { 
                     x: 450, y: 150, 
@@ -775,15 +884,8 @@
                     risk: 0,
                     latency: 0,
                     inaccessible: false,
-                    reason: null,
                     isTarget: true
                 }
-            },
-
-            getRiskColor(risk) {
-                if (risk < 30) return '#00FF00';
-                if (risk < 50) return '#FFFF00';
-                return '#FF6400';
             },
 
             calculateDistance(node1, node2) {
@@ -841,7 +943,6 @@
                     nodeSequence: this.selectedRoute
                 };
 
-                // Validate route
                 this.validateRoute();
             },
 
@@ -852,7 +953,6 @@
                     return;
                 }
 
-                // Check for critical nodes
                 let criticalCount = 0;
                 for (let i = 1; i < route.length - 1; i++) {
                     const node = NodeDatabase.nodes[route[i]];
@@ -861,7 +961,6 @@
                     }
                 }
 
-                // You can have at most 1 critical node
                 if (criticalCount > 1) {
                     document.getElementById('execute-btn').disabled = true;
                     return;
@@ -972,7 +1071,6 @@
                 }
                 document.getElementById('route-path').innerHTML = routePath;
 
-                // Update stats
                 document.getElementById('route-distance').textContent = details.totalDistance + 'km';
                 document.getElementById('route-latency').textContent = details.totalLatency + 'ms';
 
@@ -1016,13 +1114,11 @@
                 const svg = document.getElementById('map-svg');
                 svg.innerHTML = '';
 
-                // Draw all nodes
                 Object.keys(NodeDatabase.nodes).forEach(key => {
                     const node = NodeDatabase.nodes[key];
                     this.drawNode(svg, node, key);
                 });
 
-                // Draw route path
                 for (let i = 0; i < this.route.length - 1; i++) {
                     const from = NodeDatabase.nodes[this.route[i]];
                     const to = NodeDatabase.nodes[this.route[i + 1]];
@@ -1077,11 +1173,9 @@
                         `TRAVERSING: ${route[i-1]} → ${nodeName}`;
                     document.getElementById('current-hop').textContent = nodeName;
 
-                    // Add risk
                     this.totalRisk += node.risk;
                     this.detectionLevel = Math.min(this.totalRisk / 10, 100);
 
-                    // Update display
                     const riskEl = document.getElementById('risk-level');
                     if (this.detectionLevel < 30) {
                         riskEl.textContent = 'LOW';
@@ -1097,14 +1191,12 @@
                     document.getElementById('detection-level').textContent = 
                         Math.round(this.detectionLevel) + '%';
 
-                    // Check for detection
                     if (this.detectionLevel > 85) {
                         await new Promise(res => setTimeout(res, 1500));
                         this.failMission(`Detection threshold exceeded at ${nodeName}`);
                         return;
                     }
 
-                    // Check for critical security
                     if (node.security === 'CRITICAL' && Math.random() < 0.4) {
                         await new Promise(res => setTimeout(res, 1500));
                         this.failMission(`${nodeName} security system triggered`);
@@ -1184,6 +1276,7 @@
 
             init() {
                 this.canvas = document.getElementById('bg-canvas');
+                if (!this.canvas) return;
                 this.ctx = this.canvas.getContext('2d');
                 this.canvas.width = window.innerWidth;
                 this.canvas.height = window.innerHeight;
@@ -1202,6 +1295,7 @@
             },
 
             animate() {
+                if (!this.ctx) return;
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
                 this.particles.forEach(p => {
@@ -1250,6 +1344,13 @@
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') ScreenManager.switchScreen('entry');
+        });
+
+        window.addEventListener('resize', () => {
+            if (NetworkBackground.canvas) {
+                NetworkBackground.canvas.width = window.innerWidth;
+                NetworkBackground.canvas.height = window.innerHeight;
+            }
         });
     </script>
 </body>
