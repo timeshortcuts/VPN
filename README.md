@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -51,6 +51,7 @@
             pointer-events: none;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .screen.active {
@@ -64,7 +65,6 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
-            overflow: hidden;
         }
 
         #bg-canvas {
@@ -104,8 +104,6 @@
             font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -116,70 +114,9 @@
             box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
         }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* ===== DESKTOP ===== */
-        #desktop {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 100px);
-            gap: 40px;
-            padding: 40px;
-            background: linear-gradient(135deg, #05070A 0%, #0a0d1a 100%);
-            align-content: start;
-            overflow: auto;
-        }
-
-        .desktop-header {
-            grid-column: 1 / -1;
-            padding: 15px 20px;
-            border-bottom: 2px solid #00FFFF;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .file-icon {
-            text-align: center;
-            cursor: pointer;
-            padding: 10px;
-            transition: all 0.2s;
-        }
-
-        .file-icon:hover {
-            transform: scale(1.1);
-        }
-
-        .icon-image {
-            width: 60px;
-            height: 60px;
-            margin: auto 20px;
-            border: 2px solid #00FFFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            background: rgba(0, 255, 255, 0.1);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-        }
-
-        .icon-name {
-            font-size: 0.9rem;
-            margin-top: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* ===== PLANNING SCREEN (FULLY SCROLLABLE) ===== */
+        /* ===== PLANNING ===== */
         #planning {
             background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
         }
 
         .planning-header {
@@ -202,15 +139,14 @@
             opacity: 0.7;
         }
 
-        /* Scrollable content area */
         .planning-content {
             flex: 1;
             display: grid;
             grid-template-columns: 1fr 1.2fr;
             gap: 20px;
             padding: 20px;
-            overflow: auto;
-            min-height: 0;
+            overflow-y: auto;
+            overflow-x: auto;
         }
 
         .planning-content::-webkit-scrollbar {
@@ -218,37 +154,21 @@
             height: 12px;
         }
 
-        .planning-content::-webkit-scrollbar-track {
-            background: rgba(0, 255, 255, 0.05);
-        }
-
         .planning-content::-webkit-scrollbar-thumb {
             background: rgba(0, 255, 255, 0.3);
             border-radius: 6px;
-            border: 2px solid rgba(0, 255, 255, 0.05);
         }
 
-        .planning-content::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 255, 255, 0.5);
-        }
-
-        /* Node selector */
         .node-selector {
             border: 2px solid rgba(0, 255, 255, 0.5);
             background: rgba(0, 255, 255, 0.05);
             border-radius: 4px;
             padding: 20px;
             overflow-y: auto;
-            overflow-x: hidden;
-            max-height: 100%;
         }
 
         .node-selector::-webkit-scrollbar {
             width: 8px;
-        }
-
-        .node-selector::-webkit-scrollbar-track {
-            background: rgba(0, 255, 255, 0.05);
         }
 
         .node-selector::-webkit-scrollbar-thumb {
@@ -262,11 +182,6 @@
             margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: sticky;
-            top: 0;
-            background: rgba(0, 255, 255, 0.05);
-            padding: 10px 0;
-            z-index: 2;
         }
 
         .node-item {
@@ -308,24 +223,15 @@
             justify-content: space-between;
         }
 
-        .stat-label {
-            opacity: 0.6;
-        }
-
         .stat-value {
             font-weight: 700;
             color: #00FF00;
-        }
-
-        .stat-value.warning {
-            color: #FFFF00;
         }
 
         .stat-value.danger {
             color: #FF6400;
         }
 
-        /* Route builder */
         .route-builder {
             border: 2px solid rgba(0, 255, 255, 0.5);
             background: rgba(0, 255, 255, 0.05);
@@ -333,8 +239,6 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            max-height: 100%;
         }
 
         .builder-label {
@@ -342,14 +246,11 @@
             font-weight: 700;
             margin-bottom: 15px;
             text-transform: uppercase;
-            flex-shrink: 0;
         }
 
         .route-path {
-            flex-shrink: 0;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
             gap: 8px;
             margin-bottom: 20px;
             min-height: 60px;
@@ -357,22 +258,8 @@
             padding: 15px;
             border-radius: 3px;
             border: 1px solid rgba(0, 255, 255, 0.2);
-            font-size: 0.85rem;
             overflow-x: auto;
-            overflow-y: hidden;
-        }
-
-        .route-path::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .route-path::-webkit-scrollbar-track {
-            background: rgba(0, 255, 255, 0.05);
-        }
-
-        .route-path::-webkit-scrollbar-thumb {
-            background: rgba(0, 255, 255, 0.3);
-            border-radius: 3px;
+            font-size: 0.85rem;
         }
 
         .route-node {
@@ -388,7 +275,6 @@
         .route-arrow {
             opacity: 0.5;
             flex-shrink: 0;
-            font-weight: bold;
         }
 
         .route-stats {
@@ -397,7 +283,6 @@
             gap: 10px;
             margin-top: auto;
             font-size: 0.8rem;
-            flex-shrink: 0;
         }
 
         .route-stat {
@@ -420,15 +305,10 @@
             margin-top: 5px;
         }
 
-        .route-stat-value.warning {
-            color: #FFFF00;
-        }
-
         .route-stat-value.danger {
             color: #FF0000;
         }
 
-        /* Planning actions - FIXED AT BOTTOM */
         .planning-actions {
             flex-shrink: 0;
             display: flex;
@@ -436,7 +316,6 @@
             justify-content: center;
             padding: 20px 40px;
             border-top: 2px solid rgba(0, 255, 255, 0.3);
-            background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.05));
         }
 
         .action-btn {
@@ -462,90 +341,131 @@
             cursor: not-allowed;
         }
 
-        /* ===== CONNECTION ===== */
-        #connection {
+        /* ===== HACK SCREEN ===== */
+        #hack {
+            background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
-            position: relative;
-            overflow: hidden;
+            padding: 40px;
         }
 
-        .connection-header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+        .hack-container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .hack-header {
+            text-align: center;
+        }
+
+        .hack-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-shadow: 0 0 20px #00FFFF;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .hack-status {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-box {
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.05);
             padding: 20px;
-            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
-            z-index: 20;
+            border-radius: 4px;
+            text-align: center;
         }
 
-        .connection-status {
-            font-size: 0.9rem;
-            font-weight: 700;
+        .status-label {
+            font-size: 0.85rem;
             text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 10px;
             letter-spacing: 1px;
-            color: #00FFFF;
         }
 
-        .connection-status.critical {
+        .status-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #00FF00;
+            font-family: 'Courier New', monospace;
+        }
+
+        .status-value.warning {
+            color: #FFFF00;
+            text-shadow: 0 0 10px #FFFF00;
+        }
+
+        .status-value.danger {
             color: #FF0000;
             text-shadow: 0 0 10px #FF0000;
         }
 
-        .map-container {
-            width: 90vw;
-            max-width: 1100px;
-            height: 70vh;
-            border: 2px solid #00FFFF;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
-            position: relative;
-            background: linear-gradient(135deg, rgba(0, 20, 40, 0.9) 0%, rgba(0, 10, 20, 0.9) 100%);
-            overflow: hidden;
+        .phase-box {
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 4px;
         }
 
-        #map-svg {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            z-index: 3;
-        }
-
-        .connection-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 15px 20px;
-            border-top: 2px solid #00FFFF;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            font-size: 0.8rem;
-            z-index: 10;
-            background: linear-gradient(to top, rgba(0, 10, 20, 0.95), transparent);
-        }
-
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .info-label {
-            opacity: 0.7;
+        .phase-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.7rem;
+            letter-spacing: 1px;
         }
 
-        .info-value {
-            font-weight: 700;
+        .phase-status {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00FF00, #00FFFF);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px #00FF00;
+        }
+
+        .phase-display {
+            min-height: 80px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
             color: #00FF00;
+            overflow-y: auto;
+            max-height: 150px;
         }
 
-        .info-value.danger {
-            color: #FF0000;
+        .phase-display::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .phase-display::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
         }
 
         /* ===== RESULT ===== */
@@ -554,13 +474,13 @@
             align-items: center;
             background: linear-gradient(135deg, #05070A 0%, #0a1a0a 100%);
             padding: 40px;
-            text-align: center;
-            overflow: auto;
         }
 
         .result-container {
-            z-index: 10;
             max-width: 700px;
+            text-align: center;
+            overflow-y: auto;
+            max-height: 90vh;
         }
 
         .result-title {
@@ -604,8 +524,6 @@
 
         .analysis-item:last-child {
             border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
         }
 
         .analysis-label {
@@ -619,6 +537,7 @@
         .analysis-value {
             opacity: 0.8;
             line-height: 1.4;
+            font-family: 'Courier New', monospace;
         }
 
         .result-actions {
@@ -627,33 +546,13 @@
             justify-content: center;
         }
 
-        /* Responsive */
         @media (max-width: 1200px) {
             .planning-content {
                 grid-template-columns: 1fr;
             }
-        }
 
-        @media (max-width: 768px) {
-            .planning-header {
-                padding: 20px;
-            }
-
-            .planning-title {
-                font-size: 1.5rem;
-            }
-
-            .planning-content {
-                padding: 15px;
-                gap: 15px;
-            }
-
-            .planning-actions {
-                padding: 15px 20px;
-            }
-
-            .entry-title {
-                font-size: 2.5rem;
+            .hack-status {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -665,24 +564,13 @@
         <canvas id="bg-canvas"></canvas>
         <div class="entry-content">
             <div class="entry-title">NEXUS-9</div>
-            <button class="btn" onclick="ScreenManager.switchScreen('desktop')">
+            <button class="btn" onclick="ScreenManager.switchScreen('planning')">
                 INITIATE BREACH
             </button>
         </div>
     </div>
 
-    <!-- ===== DESKTOP ===== -->
-    <div id="desktop" class="screen">
-        <div class="desktop-header">
-            <div>SYSTEM DESKTOP</div>
-        </div>
-        <div class="file-icon" onclick="DesktopManager.openFile()">
-            <div class="icon-image">🌐</div>
-            <div class="icon-name">EU_NODE.exe</div>
-        </div>
-    </div>
-
-    <!-- ===== PLANNING SCREEN ===== -->
+    <!-- ===== PLANNING ===== -->
     <div id="planning" class="screen">
         <div class="planning-header">
             <div class="planning-title">ROUTE PLANNING</div>
@@ -690,12 +578,10 @@
         </div>
 
         <div class="planning-content">
-            <!-- Node Selector -->
             <div class="node-selector" id="node-selector">
                 <div class="selector-label">Available Nodes</div>
             </div>
 
-            <!-- Route Builder -->
             <div class="route-builder">
                 <div class="builder-label">Your Route</div>
                 <div class="route-path" id="route-path">
@@ -722,32 +608,40 @@
         </div>
 
         <div class="planning-actions">
-            <button class="action-btn" onclick="ScreenManager.switchScreen('desktop')">← CANCEL</button>
-            <button class="action-btn" id="execute-btn" disabled onclick="PlanningSystem.executeRoute()">EXECUTE →</button>
+            <button class="action-btn" onclick="ScreenManager.switchScreen('entry')">← CANCEL</button>
+            <button class="action-btn" id="execute-btn" disabled onclick="HackGame.startHack()">EXECUTE →</button>
         </div>
     </div>
 
-    <!-- ===== CONNECTION ===== -->
-    <div id="connection" class="screen">
-        <div class="connection-header">
-            <div class="connection-status" id="connection-status">INITIALIZING...</div>
-        </div>
+    <!-- ===== HACK SCREEN ===== -->
+    <div id="hack" class="screen">
+        <div class="hack-container">
+            <div class="hack-header">
+                <div class="hack-title" id="hack-title">NETWORK INFILTRATION</div>
+            </div>
 
-        <div class="map-container">
-            <svg id="map-svg" viewBox="0 0 1200 600"></svg>
-            <div class="connection-info">
-                <div class="info-item">
-                    <span class="info-label">Current Hop</span>
-                    <span class="info-value" id="current-hop">--</span>
+            <div class="hack-status">
+                <div class="status-box">
+                    <div class="status-label">Time Left</div>
+                    <div class="status-value" id="time-left">180s</div>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Risk Level</span>
-                    <span class="info-value" id="risk-level">--</span>
+                <div class="status-box">
+                    <div class="status-label">Phase</div>
+                    <div class="status-value" id="phase-indicator" style="font-size: 1.5rem;">CONNECTING</div>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Detection</span>
-                    <span class="info-value" id="detection-level">CLEAR</span>
+                <div class="status-box">
+                    <div class="status-label">Detection</div>
+                    <div class="status-value" id="detection-level">0%</div>
                 </div>
+            </div>
+
+            <div class="phase-box">
+                <div class="phase-title" id="phase-title">Phase 1: Connecting</div>
+                <div class="phase-status" id="phase-status">Establishing connection...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="phase-progress"></div>
+                </div>
+                <div class="phase-display" id="phase-display"></div>
             </div>
         </div>
     </div>
@@ -757,9 +651,7 @@
         <div class="result-container">
             <div class="result-title" id="result-title">OPERATION COMPLETE</div>
             <div class="result-reason" id="result-reason"></div>
-            
             <div class="result-analysis" id="result-analysis"></div>
-
             <div class="result-actions">
                 <button class="btn" onclick="ScreenManager.switchScreen('entry')">← RESTART</button>
             </div>
@@ -801,7 +693,7 @@
         /* ===== GAME STATE ===== */
         const GameState = {
             selectedRoute: ['TOKYO'],
-            routeDetails: { totalDistance: 0, totalLatency: 0, totalRisk: 0, nodeSequence: [] },
+            routeDetails: { totalDistance: 0, totalLatency: 0, totalRisk: 0 },
 
             addNodeToRoute(nodeName) {
                 if (this.selectedRoute.includes(nodeName)) {
@@ -826,7 +718,7 @@
                     totalRisk += to.risk;
                 }
 
-                this.routeDetails = { totalDistance, totalLatency, totalRisk, nodeSequence: this.selectedRoute };
+                this.routeDetails = { totalDistance, totalLatency, totalRisk };
                 this.validateRoute();
             },
 
@@ -853,6 +745,18 @@
             }
         };
 
+        /* ===== HACK STATE ===== */
+        const HackState = {
+            timeLimit: 180,
+            timeLeft: 180,
+            timer: null,
+            phase: 'connecting', // connecting → cracking → extracting → done
+            progress: 0,
+            detection: 0,
+            phaseProgress: 0,
+            maxPhaseTime: 0
+        };
+
         /* ===== SCREEN MANAGER ===== */
         const ScreenManager = {
             current: 'entry',
@@ -869,8 +773,6 @@
                     
                     if (target === 'planning') {
                         PlanningSystem.init();
-                    } else if (target === 'connection') {
-                        ConnectionSimulation.start();
                     }
                 }, 300);
             }
@@ -899,10 +801,8 @@
                         <div class="node-item" onclick="PlanningSystem.selectNode('${nodeName}')">
                             <div class="node-name">${nodeName}</div>
                             <div class="node-stats">
-                                <div class="stat-row"><span class="stat-label">Risk:</span><span class="stat-value ${node.risk > 50 ? 'danger' : node.risk > 30 ? 'warning' : ''}">${node.risk}%</span></div>
-                                <div class="stat-row"><span class="stat-label">Sec:</span><span class="stat-value">${node.security.charAt(0)}</span></div>
-                                <div class="stat-row"><span class="stat-label">Traffic:</span><span class="stat-value">${node.traffic.charAt(0)}</span></div>
-                                <div class="stat-row"><span class="stat-label">Latency:</span><span class="stat-value">${node.latency}ms</span></div>
+                                <div class="stat-row"><span>Risk:</span><span class="stat-value ${node.risk > 50 ? 'danger' : ''}">${node.risk}%</span></div>
+                                <div class="stat-row"><span>Sec:</span><span class="stat-value">${node.security.charAt(0)}</span></div>
                             </div>
                         </div>
                     `;
@@ -957,167 +857,218 @@
                     riskElement.textContent = 'CRITICAL';
                     riskElement.style.color = '#FF0000';
                 }
-            },
-
-            executeRoute() {
-                ScreenManager.switchScreen('connection');
             }
         };
 
-        /* ===== CONNECTION SIMULATION ===== */
-        const ConnectionSimulation = {
-            currentHop: 0,
-            route: GameState.selectedRoute,
-            totalRisk: 0,
-            detectionLevel: 0,
+        /* ===== HACK GAME ===== */
+        const HackGame = {
+            startHack() {
+                HackState.timeLeft = HackState.timeLimit;
+                HackState.detection = 0;
+                HackState.phase = 'connecting';
+                HackState.progress = 0;
+                HackState.phaseProgress = 0;
 
-            async start() {
-                this.route = GameState.selectedRoute;
-                this.currentHop = 0;
-                this.totalRisk = 0;
-                this.detectionLevel = 0;
+                ScreenManager.switchScreen('hack');
 
-                this.drawNetwork();
-                await this.traverseRoute();
+                this.startTimer();
+                this.startPhase1();
             },
 
-            drawNetwork() {
-                const svg = document.getElementById('map-svg');
-                svg.innerHTML = '';
+            startTimer() {
+                HackState.timer = setInterval(() => {
+                    HackState.timeLeft--;
+                    document.getElementById('time-left').textContent = HackState.timeLeft + 's';
 
-                Object.keys(NodeDatabase.nodes).forEach(key => {
-                    const node = NodeDatabase.nodes[key];
-                    this.drawNode(svg, node, key);
-                });
-
-                for (let i = 0; i < this.route.length - 1; i++) {
-                    const from = NodeDatabase.nodes[this.route[i]];
-                    const to = NodeDatabase.nodes[this.route[i + 1]];
-
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', from.x);
-                    line.setAttribute('y1', from.y);
-                    line.setAttribute('x2', to.x);
-                    line.setAttribute('y2', to.y);
-                    line.setAttribute('stroke', 'rgba(0, 255, 255, 0.3)');
-                    line.setAttribute('stroke-width', '2');
-                    svg.appendChild(line);
-                }
+                    if (HackState.timeLeft <= 0) {
+                        clearInterval(HackState.timer);
+                        this.failMission('Connection lost (timeout)');
+                    }
+                }, 1000);
             },
 
-            drawNode(svg, node, key) {
-                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                circle.setAttribute('cx', node.x);
-                circle.setAttribute('cy', node.y);
-                circle.setAttribute('r', '8');
+            startPhase1() {
+                HackState.phase = 'connecting';
+                document.getElementById('phase-title').textContent = 'Phase 1: Connecting';
+                document.getElementById('phase-indicator').textContent = 'CONNECTING';
+                document.getElementById('phase-display').innerHTML = '';
 
-                let color = '#00FFFF';
-                if (key === 'TOKYO') color = '#00FF00';
-                if (key === 'BERLIN') color = '#FF0000';
-                if (this.route.includes(key) && key !== 'TOKYO' && key !== 'BERLIN') {
-                    color = '#FFFF00';
-                }
+                const hops = GameState.selectedRoute;
+                let hopIndex = 0;
 
-                circle.setAttribute('fill', color);
-                circle.setAttribute('opacity', '0.7');
-                svg.appendChild(circle);
+                const phaseInterval = setInterval(() => {
+                    HackState.phaseProgress += Math.random() * 10;
 
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', node.x);
-                text.setAttribute('y', node.y - 20);
-                text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('fill', color);
-                text.setAttribute('font-size', '11');
-                text.setAttribute('font-weight', 'bold');
-                text.textContent = key;
-                svg.appendChild(text);
+                    if (hopIndex < hops.length && HackState.phaseProgress > hopIndex * (100 / hops.length)) {
+                        this.addLog(`[→] Connecting to ${hops[hopIndex]}...`);
+                        hopIndex++;
+                    }
+
+                    document.getElementById('phase-progress').style.width = Math.min(HackState.phaseProgress, 100) + '%';
+                    document.getElementById('phase-status').textContent = 
+                        `Establishing path: ${GameState.selectedRoute.join(' → ')}`;
+
+                    if (Math.random() < 0.03) {
+                        this.addLog(`[!] Security probe detected (+5% detection)`);
+                        this.increaseDetection(5);
+                    }
+
+                    if (HackState.phaseProgress >= 100) {
+                        clearInterval(phaseInterval);
+                        setTimeout(() => this.startPhase2(), 500);
+                    }
+                }, 200);
             },
 
-            async traverseRoute() {
-                const route = this.route;
+            startPhase2() {
+                HackState.phase = 'cracking';
+                HackState.phaseProgress = 0;
+                document.getElementById('phase-title').textContent = 'Phase 2: Security Bypass';
+                document.getElementById('phase-indicator').textContent = 'CRACKING';
+                document.getElementById('phase-display').innerHTML = '';
+                document.getElementById('phase-status').textContent = 'Attempting brute force...';
 
-                for (let i = 1; i < route.length; i++) {
-                    const nodeName = route[i];
-                    const node = NodeDatabase.nodes[nodeName];
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let fakePassword = '';
 
-                    document.getElementById('connection-status').textContent = `TRAVERSING: ${route[i-1]} → ${nodeName}`;
-                    document.getElementById('current-hop').textContent = nodeName;
+                const crackInterval = setInterval(() => {
+                    HackState.phaseProgress += Math.random() * 6;
 
-                    this.totalRisk += node.risk;
-                    this.detectionLevel = Math.min(this.totalRisk / 10, 100);
+                    fakePassword += chars[Math.floor(Math.random() * chars.length)];
+                    this.addLog(`Trying: ${fakePassword}`);
 
-                    const riskEl = document.getElementById('risk-level');
-                    if (this.detectionLevel < 30) {
-                        riskEl.textContent = 'LOW';
-                        riskEl.className = 'info-value';
-                    } else if (this.detectionLevel < 70) {
-                        riskEl.textContent = 'MEDIUM';
-                        riskEl.className = 'info-value warning';
-                    } else {
-                        riskEl.textContent = 'HIGH';
-                        riskEl.className = 'info-value danger';
+                    document.getElementById('phase-progress').style.width = Math.min(HackState.phaseProgress, 100) + '%';
+
+                    if (Math.random() < 0.08) {
+                        this.addLog(`[!] Alert triggered (+8% detection)`);
+                        this.increaseDetection(8);
                     }
 
-                    document.getElementById('detection-level').textContent = Math.round(this.detectionLevel) + '%';
+                    if (HackState.phaseProgress >= 100) {
+                        clearInterval(crackInterval);
+                        this.addLog(`[✓] Password found: ${fakePassword}`);
+                        setTimeout(() => this.startPhase3(), 500);
+                    }
+                }, 150);
+            },
 
-                    if (this.detectionLevel > 85) {
-                        await new Promise(res => setTimeout(res, 1500));
-                        this.failMission(`Detection threshold exceeded at ${nodeName}`);
-                        return;
+            startPhase3() {
+                HackState.phase = 'extracting';
+                HackState.phaseProgress = 0;
+                document.getElementById('phase-title').textContent = 'Phase 3: Data Extraction';
+                document.getElementById('phase-indicator').textContent = 'EXTRACTING';
+                document.getElementById('phase-display').innerHTML = '';
+                document.getElementById('phase-status').textContent = 'Exfiltrating classified data...';
+
+                const files = [
+                    'international_spy_network.dat',
+                    'covert_operations.log',
+                    'agent_list.enc',
+                    'classified_communications.bin'
+                ];
+
+                let fileIndex = 0;
+
+                const extractInterval = setInterval(() => {
+                    HackState.phaseProgress += Math.random() * 5;
+
+                    if (fileIndex < files.length && HackState.phaseProgress > (fileIndex / files.length) * 100) {
+                        this.addLog(`[↓] Downloading: ${files[fileIndex]}`);
+                        fileIndex++;
                     }
 
-                    if (node.security === 'CRITICAL' && Math.random() < 0.4) {
-                        await new Promise(res => setTimeout(res, 1500));
-                        this.failMission(`${nodeName} security system triggered`);
-                        return;
+                    document.getElementById('phase-progress').style.width = Math.min(HackState.phaseProgress, 100) + '%';
+
+                    if (Math.random() < 0.05) {
+                        this.increaseDetection(3);
                     }
 
-                    await new Promise(res => setTimeout(res, 2000));
+                    if (HackState.phaseProgress >= 100) {
+                        clearInterval(extractInterval);
+                        this.successMission();
+                    }
+                }, 200);
+            },
+
+            addLog(message) {
+                const display = document.getElementById('phase-display');
+                const line = document.createElement('div');
+                line.textContent = message;
+                display.appendChild(line);
+                display.scrollTop = display.scrollHeight;
+            },
+
+            increaseDetection(amount) {
+                HackState.detection += amount;
+                const detectionEl = document.getElementById('detection-level');
+                detectionEl.textContent = Math.min(HackState.detection, 100) + '%';
+
+                if (HackState.detection < 50) {
+                    detectionEl.className = 'status-value';
+                } else if (HackState.detection < 80) {
+                    detectionEl.className = 'status-value warning';
+                } else {
+                    detectionEl.className = 'status-value danger';
                 }
 
-                this.successMission();
+                if (HackState.detection >= 100) {
+                    clearInterval(HackState.timer);
+                    this.failMission('Security system triggered');
+                }
             },
 
             successMission() {
-                const analysisHTML = `
+                clearInterval(HackState.timer);
+
+                document.getElementById('result-title').textContent = 'DATA ACQUIRED';
+                document.getElementById('result-title').className = 'result-title success';
+                document.getElementById('result-reason').textContent = 
+                    'Classified intelligence files extracted successfully.';
+
+                document.getElementById('result-analysis').innerHTML = `
                     <div class="analysis-item">
-                        <div class="analysis-label">Route Chosen</div>
-                        <div class="analysis-value">${GameState.selectedRoute.join(' → ')}</div>
-                    </div>
-                    <div class="analysis-item">
-                        <div class="analysis-label">Total Risk Accumulated</div>
-                        <div class="analysis-value">${this.totalRisk}%</div>
+                        <div class="analysis-label">Files Retrieved</div>
+                        <div class="analysis-value">
+                            international_spy_network.dat<br>
+                            covert_operations.log<br>
+                            agent_list.enc<br>
+                            classified_communications.bin
+                        </div>
                     </div>
                     <div class="analysis-item">
                         <div class="analysis-label">Detection Level</div>
-                        <div class="analysis-value">${Math.round(this.detectionLevel)}% (Safe)</div>
+                        <div class="analysis-value">${Math.round(HackState.detection)}%</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Time Used</div>
+                        <div class="analysis-value">${HackState.timeLimit - HackState.timeLeft}s / ${HackState.timeLimit}s</div>
                     </div>
                 `;
-
-                document.getElementById('result-title').textContent = 'MISSION SUCCESS';
-                document.getElementById('result-title').className = 'result-title success';
-                document.getElementById('result-reason').textContent = 'You successfully breached EU_NODE.';
-                document.getElementById('result-analysis').innerHTML = analysisHTML;
 
                 ScreenManager.switchScreen('result');
             },
 
             failMission(reason) {
-                const analysisHTML = `
+                clearInterval(HackState.timer);
+
+                document.getElementById('result-title').textContent = 'MISSION FAILED';
+                document.getElementById('result-title').className = 'result-title failure';
+                document.getElementById('result-reason').textContent = reason;
+
+                document.getElementById('result-analysis').innerHTML = `
                     <div class="analysis-item">
                         <div class="analysis-label">Failure Reason</div>
                         <div class="analysis-value">${reason}</div>
                     </div>
                     <div class="analysis-item">
-                        <div class="analysis-label">Route Chosen</div>
+                        <div class="analysis-label">Detection Level</div>
+                        <div class="analysis-value">${Math.round(HackState.detection)}%</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Route Used</div>
                         <div class="analysis-value">${GameState.selectedRoute.join(' → ')}</div>
                     </div>
                 `;
-
-                document.getElementById('result-title').textContent = 'MISSION FAILED';
-                document.getElementById('result-title').className = 'result-title failure';
-                document.getElementById('result-reason').textContent = 'Your breach attempt was detected.';
-                document.getElementById('result-analysis').innerHTML = analysisHTML;
 
                 ScreenManager.switchScreen('result');
             }
@@ -1166,31 +1117,7 @@
                     this.ctx.fill();
                 });
 
-                for (let i = 0; i < this.particles.length; i++) {
-                    for (let j = i + 1; j < this.particles.length; j++) {
-                        const dx = this.particles[i].x - this.particles[j].x;
-                        const dy = this.particles[i].y - this.particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-
-                        if (dist < 150) {
-                            this.ctx.beginPath();
-                            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-                            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                            this.ctx.strokeStyle = `rgba(0, 255, 255, ${0.2 * (1 - dist / 150)})`;
-                            this.ctx.lineWidth = 0.5;
-                            this.ctx.stroke();
-                        }
-                    }
-                }
-
                 requestAnimationFrame(() => this.animate());
-            }
-        };
-
-        /* ===== DESKTOP MANAGER ===== */
-        const DesktopManager = {
-            openFile() {
-                setTimeout(() => ScreenManager.switchScreen('planning'), 1500);
             }
         };
 
