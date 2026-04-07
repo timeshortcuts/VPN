@@ -15,13 +15,13 @@
         html, body {
             width: 100%;
             height: 100%;
+            overflow: hidden;
         }
 
         body {
             background: #05070A;
             color: #00FFFF;
             font-family: 'Orbitron', monospace;
-            overflow: hidden;
             position: relative;
         }
 
@@ -49,6 +49,8 @@
             visibility: hidden;
             transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
+            display: flex;
+            flex-direction: column;
         }
 
         .screen.active {
@@ -59,8 +61,6 @@
 
         /* ===== ENTRY ===== */
         #entry {
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
@@ -174,13 +174,12 @@
             letter-spacing: 1px;
         }
 
-        /* ===== PLANNING SCREEN (SCROLLABLE) ===== */
+        /* ===== PLANNING SCREEN (FULLY SCROLLABLE) ===== */
         #planning {
+            background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
             display: flex;
             flex-direction: column;
-            background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
             overflow: hidden;
-            position: relative;
         }
 
         .planning-header {
@@ -189,7 +188,6 @@
             padding: 30px 40px;
             border-bottom: 2px solid rgba(0, 255, 255, 0.3);
             background: linear-gradient(to bottom, rgba(0, 255, 255, 0.05), transparent);
-            z-index: 5;
         }
 
         .planning-title {
@@ -204,6 +202,7 @@
             opacity: 0.7;
         }
 
+        /* Scrollable content area */
         .planning-content {
             flex: 1;
             display: grid;
@@ -214,7 +213,6 @@
             min-height: 0;
         }
 
-        /* Scrollbar styling for planning-content */
         .planning-content::-webkit-scrollbar {
             width: 12px;
             height: 12px;
@@ -242,6 +240,7 @@
             padding: 20px;
             overflow-y: auto;
             overflow-x: hidden;
+            max-height: 100%;
         }
 
         .node-selector::-webkit-scrollbar {
@@ -335,6 +334,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            max-height: 100%;
         }
 
         .builder-label {
@@ -428,7 +428,7 @@
             color: #FF0000;
         }
 
-        /* Planning actions */
+        /* Planning actions - FIXED AT BOTTOM */
         .planning-actions {
             flex-shrink: 0;
             display: flex;
@@ -437,7 +437,6 @@
             padding: 20px 40px;
             border-top: 2px solid rgba(0, 255, 255, 0.3);
             background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.05));
-            z-index: 5;
         }
 
         .action-btn {
@@ -463,20 +462,8 @@
             cursor: not-allowed;
         }
 
-        .action-btn.danger {
-            border-color: #FF6400;
-            color: #FF6400;
-        }
-
-        .action-btn.danger:hover:not(:disabled) {
-            background: rgba(255, 100, 0, 0.15);
-            box-shadow: 0 0 20px rgba(255, 100, 0, 0.5);
-        }
-
         /* ===== CONNECTION ===== */
         #connection {
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
@@ -563,8 +550,6 @@
 
         /* ===== RESULT ===== */
         #result {
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #05070A 0%, #0a1a0a 100%);
@@ -642,7 +627,7 @@
             justify-content: center;
         }
 
-        /* Responsive for smaller screens */
+        /* Responsive */
         @media (max-width: 1200px) {
             .planning-content {
                 grid-template-columns: 1fr;
@@ -682,7 +667,6 @@
             <div class="entry-title">NEXUS-9</div>
             <button class="btn" onclick="ScreenManager.switchScreen('desktop')">
                 INITIATE BREACH
-                <span class="btn-subtitle">Plan your attack</span>
             </button>
         </div>
     </div>
@@ -786,106 +770,17 @@
         /* ===== NODE DATABASE ===== */
         const NodeDatabase = {
             nodes: {
-                'TOKYO': { 
-                    x: 950, y: 250, 
-                    lat: 35.6762, lon: 139.6503, 
-                    traffic: 'HIGH',
-                    security: 'STRONG',
-                    risk: 15,
-                    latency: 0,
-                    inaccessible: false
-                },
-                'BEIJING': { 
-                    x: 850, y: 220, 
-                    lat: 39.9042, lon: 116.4074, 
-                    traffic: 'MEDIUM',
-                    security: 'STRONG',
-                    risk: 35,
-                    latency: 85,
-                    inaccessible: false
-                },
-                'MOSCOW': { 
-                    x: 550, y: 180, 
-                    lat: 55.7558, lon: 37.6173, 
-                    traffic: 'LOW',
-                    security: 'CRITICAL',
-                    risk: 70,
-                    latency: 180,
-                    inaccessible: false
-                },
-                'ISTANBUL': { 
-                    x: 600, y: 220, 
-                    lat: 41.0082, lon: 28.9784, 
-                    traffic: 'HIGH',
-                    security: 'MEDIUM',
-                    risk: 40,
-                    latency: 120,
-                    inaccessible: false
-                },
-                'DUBAI': { 
-                    x: 700, y: 300, 
-                    lat: 25.2048, lon: 55.2708, 
-                    traffic: 'VERY_HIGH',
-                    security: 'WEAK',
-                    risk: 25,
-                    latency: 140,
-                    inaccessible: false
-                },
-                'SINGAPORE': { 
-                    x: 900, y: 380, 
-                    lat: 1.3521, lon: 103.8198, 
-                    traffic: 'MEDIUM',
-                    security: 'MEDIUM',
-                    risk: 45,
-                    latency: 220,
-                    inaccessible: false
-                },
-                'FRANKFURT': { 
-                    x: 480, y: 160, 
-                    lat: 50.1109, lon: 8.6821, 
-                    traffic: 'HIGH',
-                    security: 'CRITICAL',
-                    risk: 60,
-                    latency: 200,
-                    inaccessible: false
-                },
-                'AMSTERDAM': {
-                    x: 470, y: 140,
-                    lat: 52.3676, lon: 4.9041,
-                    traffic: 'MEDIUM',
-                    security: 'MEDIUM',
-                    risk: 35,
-                    latency: 190,
-                    inaccessible: false
-                },
-                'LONDON': {
-                    x: 410, y: 130,
-                    lat: 51.5074, lon: -0.1278,
-                    traffic: 'HIGH',
-                    security: 'MEDIUM',
-                    risk: 38,
-                    latency: 210,
-                    inaccessible: false
-                },
-                'PARIS': {
-                    x: 440, y: 145,
-                    lat: 48.8566, lon: 2.3522,
-                    traffic: 'MEDIUM',
-                    security: 'STRONG',
-                    risk: 42,
-                    latency: 205,
-                    inaccessible: false
-                },
-                'BERLIN': { 
-                    x: 450, y: 150, 
-                    lat: 52.5200, lon: 13.4050, 
-                    traffic: 'MEDIUM',
-                    security: 'CRITICAL',
-                    risk: 0,
-                    latency: 0,
-                    inaccessible: false,
-                    isTarget: true
-                }
+                'TOKYO': { x: 950, y: 250, lat: 35.6762, lon: 139.6503, traffic: 'HIGH', security: 'STRONG', risk: 15, latency: 0 },
+                'BEIJING': { x: 850, y: 220, lat: 39.9042, lon: 116.4074, traffic: 'MEDIUM', security: 'STRONG', risk: 35, latency: 85 },
+                'MOSCOW': { x: 550, y: 180, lat: 55.7558, lon: 37.6173, traffic: 'LOW', security: 'CRITICAL', risk: 70, latency: 180 },
+                'ISTANBUL': { x: 600, y: 220, lat: 41.0082, lon: 28.9784, traffic: 'HIGH', security: 'MEDIUM', risk: 40, latency: 120 },
+                'DUBAI': { x: 700, y: 300, lat: 25.2048, lon: 55.2708, traffic: 'VERY_HIGH', security: 'WEAK', risk: 25, latency: 140 },
+                'SINGAPORE': { x: 900, y: 380, lat: 1.3521, lon: 103.8198, traffic: 'MEDIUM', security: 'MEDIUM', risk: 45, latency: 220 },
+                'FRANKFURT': { x: 480, y: 160, lat: 50.1109, lon: 8.6821, traffic: 'HIGH', security: 'CRITICAL', risk: 60, latency: 200 },
+                'AMSTERDAM': { x: 470, y: 140, lat: 52.3676, lon: 4.9041, traffic: 'MEDIUM', security: 'MEDIUM', risk: 35, latency: 190 },
+                'LONDON': { x: 410, y: 130, lat: 51.5074, lon: -0.1278, traffic: 'HIGH', security: 'MEDIUM', risk: 38, latency: 210 },
+                'PARIS': { x: 440, y: 145, lat: 48.8566, lon: 2.3522, traffic: 'MEDIUM', security: 'STRONG', risk: 42, latency: 205 },
+                'BERLIN': { x: 450, y: 150, lat: 52.5200, lon: 13.4050, traffic: 'MEDIUM', security: 'CRITICAL', risk: 0, latency: 0, isTarget: true }
             },
 
             calculateDistance(node1, node2) {
@@ -906,12 +801,7 @@
         /* ===== GAME STATE ===== */
         const GameState = {
             selectedRoute: ['TOKYO'],
-            routeDetails: {
-                totalDistance: 0,
-                totalLatency: 0,
-                totalRisk: 0,
-                nodeSequence: []
-            },
+            routeDetails: { totalDistance: 0, totalLatency: 0, totalRisk: 0, nodeSequence: [] },
 
             addNodeToRoute(nodeName) {
                 if (this.selectedRoute.includes(nodeName)) {
@@ -936,13 +826,7 @@
                     totalRisk += to.risk;
                 }
 
-                this.routeDetails = {
-                    totalDistance,
-                    totalLatency,
-                    totalRisk,
-                    nodeSequence: this.selectedRoute
-                };
-
+                this.routeDetails = { totalDistance, totalLatency, totalRisk, nodeSequence: this.selectedRoute };
                 this.validateRoute();
             },
 
@@ -955,8 +839,7 @@
 
                 let criticalCount = 0;
                 for (let i = 1; i < route.length - 1; i++) {
-                    const node = NodeDatabase.nodes[route[i]];
-                    if (node.security === 'CRITICAL') {
+                    if (NodeDatabase.nodes[route[i]].security === 'CRITICAL') {
                         criticalCount++;
                     }
                 }
@@ -1016,22 +899,10 @@
                         <div class="node-item" onclick="PlanningSystem.selectNode('${nodeName}')">
                             <div class="node-name">${nodeName}</div>
                             <div class="node-stats">
-                                <div class="stat-row">
-                                    <span class="stat-label">Risk:</span>
-                                    <span class="stat-value ${node.risk > 50 ? 'danger' : node.risk > 30 ? 'warning' : ''}">${node.risk}%</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Sec:</span>
-                                    <span class="stat-value">${node.security.charAt(0)}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Traffic:</span>
-                                    <span class="stat-value">${node.traffic.charAt(0)}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Latency:</span>
-                                    <span class="stat-value">${node.latency}ms</span>
-                                </div>
+                                <div class="stat-row"><span class="stat-label">Risk:</span><span class="stat-value ${node.risk > 50 ? 'danger' : node.risk > 30 ? 'warning' : ''}">${node.risk}%</span></div>
+                                <div class="stat-row"><span class="stat-label">Sec:</span><span class="stat-value">${node.security.charAt(0)}</span></div>
+                                <div class="stat-row"><span class="stat-label">Traffic:</span><span class="stat-value">${node.traffic.charAt(0)}</span></div>
+                                <div class="stat-row"><span class="stat-label">Latency:</span><span class="stat-value">${node.latency}ms</span></div>
                             </div>
                         </div>
                     `;
@@ -1169,8 +1040,7 @@
                     const nodeName = route[i];
                     const node = NodeDatabase.nodes[nodeName];
 
-                    document.getElementById('connection-status').textContent = 
-                        `TRAVERSING: ${route[i-1]} → ${nodeName}`;
+                    document.getElementById('connection-status').textContent = `TRAVERSING: ${route[i-1]} → ${nodeName}`;
                     document.getElementById('current-hop').textContent = nodeName;
 
                     this.totalRisk += node.risk;
@@ -1188,8 +1058,7 @@
                         riskEl.className = 'info-value danger';
                     }
 
-                    document.getElementById('detection-level').textContent = 
-                        Math.round(this.detectionLevel) + '%';
+                    document.getElementById('detection-level').textContent = Math.round(this.detectionLevel) + '%';
 
                     if (this.detectionLevel > 85) {
                         await new Promise(res => setTimeout(res, 1500));
@@ -1217,22 +1086,17 @@
                     </div>
                     <div class="analysis-item">
                         <div class="analysis-label">Total Risk Accumulated</div>
-                        <div class="analysis-value">${this.totalRisk}% (Below threshold: 100%)</div>
+                        <div class="analysis-value">${this.totalRisk}%</div>
                     </div>
                     <div class="analysis-item">
                         <div class="analysis-label">Detection Level</div>
                         <div class="analysis-value">${Math.round(this.detectionLevel)}% (Safe)</div>
                     </div>
-                    <div class="analysis-item">
-                        <div class="analysis-label">Decision Quality</div>
-                        <div class="analysis-value">Excellent route planning. You selected the optimal path with minimal security exposure.</div>
-                    </div>
                 `;
 
                 document.getElementById('result-title').textContent = 'MISSION SUCCESS';
                 document.getElementById('result-title').className = 'result-title success';
-                document.getElementById('result-reason').textContent = 
-                    'You successfully breached EU_NODE through careful route planning and risk management.';
+                document.getElementById('result-reason').textContent = 'You successfully breached EU_NODE.';
                 document.getElementById('result-analysis').innerHTML = analysisHTML;
 
                 ScreenManager.switchScreen('result');
@@ -1248,20 +1112,11 @@
                         <div class="analysis-label">Route Chosen</div>
                         <div class="analysis-value">${GameState.selectedRoute.join(' → ')}</div>
                     </div>
-                    <div class="analysis-item">
-                        <div class="analysis-label">Risk Accumulated</div>
-                        <div class="analysis-value">${this.totalRisk}%</div>
-                    </div>
-                    <div class="analysis-item">
-                        <div class="analysis-label">What Went Wrong</div>
-                        <div class="analysis-value">Your route triggered security systems. Consider avoiding CRITICAL security nodes or reducing overall risk by choosing alternative paths.</div>
-                    </div>
                 `;
 
                 document.getElementById('result-title').textContent = 'MISSION FAILED';
                 document.getElementById('result-title').className = 'result-title failure';
-                document.getElementById('result-reason').textContent = 
-                    'Your breach attempt was detected and intercepted.';
+                document.getElementById('result-reason').textContent = 'Your breach attempt was detected.';
                 document.getElementById('result-analysis').innerHTML = analysisHTML;
 
                 ScreenManager.switchScreen('result');
@@ -1344,13 +1199,6 @@
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') ScreenManager.switchScreen('entry');
-        });
-
-        window.addEventListener('resize', () => {
-            if (NetworkBackground.canvas) {
-                NetworkBackground.canvas.width = window.innerWidth;
-                NetworkBackground.canvas.height = window.innerHeight;
-            }
         });
     </script>
 </body>
