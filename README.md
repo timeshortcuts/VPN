@@ -122,7 +122,7 @@
         .planning-header {
             flex-shrink: 0;
             text-align: center;
-            padding: 30px 40px;
+            padding: 30px 20px;
             border-bottom: 2px solid rgba(0, 255, 255, 0.3);
             background: linear-gradient(to bottom, rgba(0, 255, 255, 0.05), transparent);
         }
@@ -139,24 +139,32 @@
             opacity: 0.7;
         }
 
-        .planning-content {
+        /* Main scrollable area - CENTER ALIGNED */
+        .planning-wrapper {
             flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .planning-wrapper::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .planning-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 6px;
+        }
+
+        .planning-content {
+            width: 100%;
+            max-width: 1200px;
             display: grid;
             grid-template-columns: 1fr 1.2fr;
             gap: 20px;
-            padding: 20px;
-            overflow-y: auto;
-            overflow-x: auto;
-        }
-
-        .planning-content::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
-        }
-
-        .planning-content::-webkit-scrollbar-thumb {
-            background: rgba(0, 255, 255, 0.3);
-            border-radius: 6px;
         }
 
         .node-selector {
@@ -165,6 +173,7 @@
             border-radius: 4px;
             padding: 20px;
             overflow-y: auto;
+            max-height: 500px;
         }
 
         .node-selector::-webkit-scrollbar {
@@ -208,6 +217,7 @@
         .node-name {
             font-weight: 700;
             margin-bottom: 5px;
+            font-size: 0.95rem;
         }
 
         .node-stats {
@@ -239,6 +249,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            max-height: 500px;
         }
 
         .builder-label {
@@ -260,6 +271,15 @@
             border: 1px solid rgba(0, 255, 255, 0.2);
             overflow-x: auto;
             font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .route-path::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .route-path::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
         }
 
         .route-node {
@@ -270,6 +290,7 @@
             white-space: nowrap;
             font-weight: 700;
             flex-shrink: 0;
+            font-size: 0.9rem;
         }
 
         .route-arrow {
@@ -282,7 +303,8 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-top: auto;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            flex-shrink: 0;
         }
 
         .route-stat {
@@ -290,17 +312,18 @@
             padding: 10px;
             background: rgba(0, 255, 255, 0.05);
             border-radius: 3px;
+            text-align: center;
         }
 
         .route-stat-label {
             opacity: 0.7;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
         }
 
         .route-stat-value {
             font-weight: 900;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #00FF00;
             margin-top: 5px;
         }
@@ -314,7 +337,7 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            padding: 20px 40px;
+            padding: 20px;
             border-top: 2px solid rgba(0, 255, 255, 0.3);
         }
 
@@ -329,6 +352,7 @@
             transition: all 0.3s;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-size: 0.95rem;
         }
 
         .action-btn:hover:not(:disabled) {
@@ -346,7 +370,7 @@
             background: linear-gradient(135deg, #05070A 0%, #0a0d15 100%);
             justify-content: center;
             align-items: center;
-            padding: 40px;
+            padding: 20px;
         }
 
         .hack-container {
@@ -362,7 +386,7 @@
         }
 
         .hack-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 900;
             text-shadow: 0 0 20px #00FFFF;
             margin-bottom: 15px;
@@ -371,7 +395,7 @@
 
         .hack-status {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
@@ -393,7 +417,7 @@
         }
 
         .status-value {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 900;
             color: #00FF00;
             font-family: 'Courier New', monospace;
@@ -417,7 +441,7 @@
         }
 
         .phase-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 900;
             margin-bottom: 15px;
             text-transform: uppercase;
@@ -425,7 +449,7 @@
         }
 
         .phase-status {
-            font-size: 1rem;
+            font-size: 0.95rem;
             margin-bottom: 15px;
             opacity: 0.9;
         }
@@ -454,7 +478,7 @@
             padding: 15px;
             border-radius: 3px;
             font-family: 'Courier New', monospace;
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #00FF00;
             overflow-y: auto;
             max-height: 150px;
@@ -473,18 +497,17 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #05070A 0%, #0a1a0a 100%);
-            padding: 40px;
+            padding: 20px;
+            overflow-y: auto;
         }
 
         .result-container {
-            max-width: 700px;
+            max-width: 600px;
             text-align: center;
-            overflow-y: auto;
-            max-height: 90vh;
         }
 
         .result-title {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 20px;
             letter-spacing: 3px;
@@ -501,7 +524,7 @@
         }
 
         .result-reason {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 30px;
             line-height: 1.6;
         }
@@ -530,7 +553,7 @@
             font-weight: 700;
             color: #00FFFF;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin-bottom: 5px;
         }
 
@@ -538,6 +561,7 @@
             opacity: 0.8;
             line-height: 1.4;
             font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
         }
 
         .result-actions {
@@ -546,13 +570,62 @@
             justify-content: center;
         }
 
-        @media (max-width: 1200px) {
+        /* Responsive */
+        @media (max-width: 1024px) {
             .planning-content {
                 grid-template-columns: 1fr;
             }
 
             .hack-status {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .planning-title {
+                font-size: 1.5rem;
+            }
+
+            .hack-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .planning-header {
+                padding: 20px 15px;
+            }
+
+            .planning-title {
+                font-size: 1.3rem;
+                margin-bottom: 5px;
+            }
+
+            .planning-subtitle {
+                font-size: 0.8rem;
+            }
+
+            .entry-title {
+                font-size: 2.5rem;
+            }
+
+            .hack-status {
                 grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .node-selector {
+                max-height: 300px;
+            }
+
+            .route-builder {
+                max-height: 300px;
+            }
+
+            .route-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .status-value {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -577,31 +650,33 @@
             <div class="planning-subtitle">Select nodes and build your attack route</div>
         </div>
 
-        <div class="planning-content">
-            <div class="node-selector" id="node-selector">
-                <div class="selector-label">Available Nodes</div>
-            </div>
-
-            <div class="route-builder">
-                <div class="builder-label">Your Route</div>
-                <div class="route-path" id="route-path">
-                    <span class="route-node">TOKYO</span>
-                    <span class="route-arrow">→</span>
-                    <span class="route-node">BERLIN</span>
+        <div class="planning-wrapper">
+            <div class="planning-content">
+                <div class="node-selector" id="node-selector">
+                    <div class="selector-label">Available Nodes</div>
                 </div>
 
-                <div class="route-stats">
-                    <div class="route-stat">
-                        <div class="route-stat-label">Total Risk</div>
-                        <div class="route-stat-value" id="route-risk">SAFE</div>
+                <div class="route-builder">
+                    <div class="builder-label">Your Route</div>
+                    <div class="route-path" id="route-path">
+                        <span class="route-node">TOKYO</span>
+                        <span class="route-arrow">→</span>
+                        <span class="route-node">BERLIN</span>
                     </div>
-                    <div class="route-stat">
-                        <div class="route-stat-label">Distance</div>
-                        <div class="route-stat-value" id="route-distance">0km</div>
-                    </div>
-                    <div class="route-stat">
-                        <div class="route-stat-label">Latency</div>
-                        <div class="route-stat-value" id="route-latency">--ms</div>
+
+                    <div class="route-stats">
+                        <div class="route-stat">
+                            <div class="route-stat-label">Total Risk</div>
+                            <div class="route-stat-value" id="route-risk">SAFE</div>
+                        </div>
+                        <div class="route-stat">
+                            <div class="route-stat-label">Distance</div>
+                            <div class="route-stat-value" id="route-distance">0km</div>
+                        </div>
+                        <div class="route-stat">
+                            <div class="route-stat-label">Latency</div>
+                            <div class="route-stat-value" id="route-latency">--ms</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -662,31 +737,17 @@
         /* ===== NODE DATABASE ===== */
         const NodeDatabase = {
             nodes: {
-                'TOKYO': { x: 950, y: 250, lat: 35.6762, lon: 139.6503, traffic: 'HIGH', security: 'STRONG', risk: 15, latency: 0 },
-                'BEIJING': { x: 850, y: 220, lat: 39.9042, lon: 116.4074, traffic: 'MEDIUM', security: 'STRONG', risk: 35, latency: 85 },
-                'MOSCOW': { x: 550, y: 180, lat: 55.7558, lon: 37.6173, traffic: 'LOW', security: 'CRITICAL', risk: 70, latency: 180 },
-                'ISTANBUL': { x: 600, y: 220, lat: 41.0082, lon: 28.9784, traffic: 'HIGH', security: 'MEDIUM', risk: 40, latency: 120 },
-                'DUBAI': { x: 700, y: 300, lat: 25.2048, lon: 55.2708, traffic: 'VERY_HIGH', security: 'WEAK', risk: 25, latency: 140 },
-                'SINGAPORE': { x: 900, y: 380, lat: 1.3521, lon: 103.8198, traffic: 'MEDIUM', security: 'MEDIUM', risk: 45, latency: 220 },
-                'FRANKFURT': { x: 480, y: 160, lat: 50.1109, lon: 8.6821, traffic: 'HIGH', security: 'CRITICAL', risk: 60, latency: 200 },
-                'AMSTERDAM': { x: 470, y: 140, lat: 52.3676, lon: 4.9041, traffic: 'MEDIUM', security: 'MEDIUM', risk: 35, latency: 190 },
-                'LONDON': { x: 410, y: 130, lat: 51.5074, lon: -0.1278, traffic: 'HIGH', security: 'MEDIUM', risk: 38, latency: 210 },
-                'PARIS': { x: 440, y: 145, lat: 48.8566, lon: 2.3522, traffic: 'MEDIUM', security: 'STRONG', risk: 42, latency: 205 },
-                'BERLIN': { x: 450, y: 150, lat: 52.5200, lon: 13.4050, traffic: 'MEDIUM', security: 'CRITICAL', risk: 0, latency: 0, isTarget: true }
-            },
-
-            calculateDistance(node1, node2) {
-                const R = 6371;
-                const lat1 = node1.lat * Math.PI / 180;
-                const lat2 = node2.lat * Math.PI / 180;
-                const dLat = (node2.lat - node1.lat) * Math.PI / 180;
-                const dLon = (node2.lon - node1.lon) * Math.PI / 180;
-                
-                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                          Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon/2) * Math.sin(dLon/2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                
-                return Math.round(R * c);
+                'TOKYO': { risk: 15, latency: 0 },
+                'BEIJING': { risk: 35, latency: 85 },
+                'MOSCOW': { risk: 70, latency: 180 },
+                'ISTANBUL': { risk: 40, latency: 120 },
+                'DUBAI': { risk: 25, latency: 140 },
+                'SINGAPORE': { risk: 45, latency: 220 },
+                'FRANKFURT': { risk: 60, latency: 200 },
+                'AMSTERDAM': { risk: 35, latency: 190 },
+                'LONDON': { risk: 38, latency: 210 },
+                'PARIS': { risk: 42, latency: 205 },
+                'BERLIN': { risk: 0, latency: 0, isTarget: true }
             }
         };
 
@@ -705,20 +766,16 @@
             },
 
             recalculateRoute() {
-                let totalDistance = 0;
-                let totalLatency = 0;
                 let totalRisk = 0;
+                let totalLatency = 0;
 
-                for (let i = 0; i < this.selectedRoute.length - 1; i++) {
-                    const from = NodeDatabase.nodes[this.selectedRoute[i]];
-                    const to = NodeDatabase.nodes[this.selectedRoute[i + 1]];
-                    
-                    totalDistance += NodeDatabase.calculateDistance(from, to);
-                    totalLatency += to.latency;
-                    totalRisk += to.risk;
+                for (let i = 1; i < this.selectedRoute.length; i++) {
+                    const node = NodeDatabase.nodes[this.selectedRoute[i]];
+                    totalRisk += node.risk;
+                    totalLatency += node.latency;
                 }
 
-                this.routeDetails = { totalDistance, totalLatency, totalRisk };
+                this.routeDetails = { totalRisk, totalLatency };
                 this.validateRoute();
             },
 
@@ -728,19 +785,6 @@
                     document.getElementById('execute-btn').disabled = true;
                     return;
                 }
-
-                let criticalCount = 0;
-                for (let i = 1; i < route.length - 1; i++) {
-                    if (NodeDatabase.nodes[route[i]].security === 'CRITICAL') {
-                        criticalCount++;
-                    }
-                }
-
-                if (criticalCount > 1) {
-                    document.getElementById('execute-btn').disabled = true;
-                    return;
-                }
-
                 document.getElementById('execute-btn').disabled = false;
             }
         };
@@ -750,11 +794,8 @@
             timeLimit: 180,
             timeLeft: 180,
             timer: null,
-            phase: 'connecting', // connecting → cracking → extracting → done
-            progress: 0,
-            detection: 0,
-            phaseProgress: 0,
-            maxPhaseTime: 0
+            phase: 'connecting',
+            detection: 0
         };
 
         /* ===== SCREEN MANAGER ===== */
@@ -802,7 +843,6 @@
                             <div class="node-name">${nodeName}</div>
                             <div class="node-stats">
                                 <div class="stat-row"><span>Risk:</span><span class="stat-value ${node.risk > 50 ? 'danger' : ''}">${node.risk}%</span></div>
-                                <div class="stat-row"><span>Sec:</span><span class="stat-value">${node.security.charAt(0)}</span></div>
                             </div>
                         </div>
                     `;
@@ -842,7 +882,6 @@
                 }
                 document.getElementById('route-path').innerHTML = routePath;
 
-                document.getElementById('route-distance').textContent = details.totalDistance + 'km';
                 document.getElementById('route-latency').textContent = details.totalLatency + 'ms';
 
                 const riskLevel = details.totalRisk;
@@ -866,8 +905,6 @@
                 HackState.timeLeft = HackState.timeLimit;
                 HackState.detection = 0;
                 HackState.phase = 'connecting';
-                HackState.progress = 0;
-                HackState.phaseProgress = 0;
 
                 ScreenManager.switchScreen('hack');
 
@@ -895,25 +932,24 @@
 
                 const hops = GameState.selectedRoute;
                 let hopIndex = 0;
+                let progress = 0;
 
                 const phaseInterval = setInterval(() => {
-                    HackState.phaseProgress += Math.random() * 10;
+                    progress += Math.random() * 10;
 
-                    if (hopIndex < hops.length && HackState.phaseProgress > hopIndex * (100 / hops.length)) {
+                    if (hopIndex < hops.length && progress > hopIndex * (100 / hops.length)) {
                         this.addLog(`[→] Connecting to ${hops[hopIndex]}...`);
                         hopIndex++;
                     }
 
-                    document.getElementById('phase-progress').style.width = Math.min(HackState.phaseProgress, 100) + '%';
-                    document.getElementById('phase-status').textContent = 
-                        `Establishing path: ${GameState.selectedRoute.join(' → ')}`;
+                    document.getElementById('phase-progress').style.width = Math.min(progress, 100) + '%';
 
                     if (Math.random() < 0.03) {
-                        this.addLog(`[!] Security probe detected (+5% detection)`);
+                        this.addLog(`[!] Security probe detected (+5%)`);
                         this.increaseDetection(5);
                     }
 
-                    if (HackState.phaseProgress >= 100) {
+                    if (progress >= 100) {
                         clearInterval(phaseInterval);
                         setTimeout(() => this.startPhase2(), 500);
                     }
@@ -922,7 +958,6 @@
 
             startPhase2() {
                 HackState.phase = 'cracking';
-                HackState.phaseProgress = 0;
                 document.getElementById('phase-title').textContent = 'Phase 2: Security Bypass';
                 document.getElementById('phase-indicator').textContent = 'CRACKING';
                 document.getElementById('phase-display').innerHTML = '';
@@ -930,21 +965,22 @@
 
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
                 let fakePassword = '';
+                let progress = 0;
 
                 const crackInterval = setInterval(() => {
-                    HackState.phaseProgress += Math.random() * 6;
+                    progress += Math.random() * 6;
 
                     fakePassword += chars[Math.floor(Math.random() * chars.length)];
                     this.addLog(`Trying: ${fakePassword}`);
 
-                    document.getElementById('phase-progress').style.width = Math.min(HackState.phaseProgress, 100) + '%';
+                    document.getElementById('phase-progress').style.width = Math.min(progress, 100) + '%';
 
                     if (Math.random() < 0.08) {
-                        this.addLog(`[!] Alert triggered (+8% detection)`);
+                        this.addLog(`[!] Alert triggered (+8%)`);
                         this.increaseDetection(8);
                     }
 
-                    if (HackState.phaseProgress >= 100) {
+                    if (progress >= 100) {
                         clearInterval(crackInterval);
                         this.addLog(`[✓] Password found: ${fakePassword}`);
                         setTimeout(() => this.startPhase3(), 500);
@@ -954,7 +990,6 @@
 
             startPhase3() {
                 HackState.phase = 'extracting';
-                HackState.phaseProgress = 0;
                 document.getElementById('phase-title').textContent = 'Phase 3: Data Extraction';
                 document.getElementById('phase-indicator').textContent = 'EXTRACTING';
                 document.getElementById('phase-display').innerHTML = '';
@@ -968,22 +1003,23 @@
                 ];
 
                 let fileIndex = 0;
+                let progress = 0;
 
                 const extractInterval = setInterval(() => {
-                    HackState.phaseProgress += Math.random() * 5;
+                    progress += Math.random() * 5;
 
-                    if (fileIndex < files.length && HackState.phaseProgress > (fileIndex / files.length) * 100) {
+                    if (fileIndex < files.length && progress > (fileIndex / files.length) * 100) {
                         this.addLog(`[↓] Downloading: ${files[fileIndex]}`);
                         fileIndex++;
                     }
 
-                    document.getElementById('phase-progress').style.width = Math.min(HackState.phaseProgress, 100) + '%';
+                    document.getElementById('phase-progress').style.width = Math.min(progress, 100) + '%';
 
                     if (Math.random() < 0.05) {
                         this.increaseDetection(3);
                     }
 
-                    if (HackState.phaseProgress >= 100) {
+                    if (progress >= 100) {
                         clearInterval(extractInterval);
                         this.successMission();
                     }
@@ -1028,12 +1064,7 @@
                 document.getElementById('result-analysis').innerHTML = `
                     <div class="analysis-item">
                         <div class="analysis-label">Files Retrieved</div>
-                        <div class="analysis-value">
-                            international_spy_network.dat<br>
-                            covert_operations.log<br>
-                            agent_list.enc<br>
-                            classified_communications.bin
-                        </div>
+                        <div class="analysis-value">international_spy_network.dat<br>covert_operations.log<br>agent_list.enc<br>classified_communications.bin</div>
                     </div>
                     <div class="analysis-item">
                         <div class="analysis-label">Detection Level</div>
